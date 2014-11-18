@@ -1,12 +1,12 @@
 #include "game.hpp"
 #include "StringHelper.hpp"
-
+#include <iostream>
 
 const float Game::PlayerSpeed = 400.f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 Game::Game()
-	: mWindow(sf::VideoMode(640, 480), "SFML Application", sf::Style::Close)
+	: mWindow(sf::VideoMode(1920,1400), "SFML Game", sf::Style::Close)
 	, mTexture()
 	, mPlayer()
 	, mFont()
@@ -15,8 +15,9 @@ Game::Game()
 	, mStatisticsNumFrames(0)
 	, mIsMovingUp(false)
 	, mIsMovingDown(false)
-	, mIsMovingRight(false)	
+	, mIsMovingRight(false)
 	, mIsMovingLeft(false)
+	, mTileMap(mWindow.getSize())
 {
 	if (!mTexture.loadFromFile("testchar.png"))
 	{
@@ -31,6 +32,12 @@ Game::Game()
 	mStatisticsText.setPosition(5.f, 5.f);
 	mStatisticsText.setCharacterSize(10);
 }
+
+
+
+
+
+
 
 void Game::run()
 {
@@ -47,11 +54,15 @@ void Game::run()
 			processEvents();
 			update(TimePerFrame);
 		}
-
+		
 		updateStatistics(elapsedTime);
 		render();
 	}
 }
+
+
+
+
 
 void Game::processEvents()
 {
@@ -76,9 +87,24 @@ void Game::processEvents()
 }
 
 
+
+
+
+
+
+
 //Pass time to calculate frame independent movement speed
 void Game::update(sf::Time elapsedTime)
 {
+
+
+
+	
+	
+
+	
+
+	//Handle movement
 	sf::Vector2f movement(0.f, 0.f);
 	if (mIsMovingUp)
 		movement.y -= PlayerSpeed;
@@ -88,20 +114,61 @@ void Game::update(sf::Time elapsedTime)
 		movement.x -= PlayerSpeed;
 	if (mIsMovingRight)
 		movement.x += PlayerSpeed;
-			
 	mPlayer.move(movement * elapsedTime.asSeconds());
 }
 
+
+
+
+
+
+
+
+
+
+
 void Game::render()
-{
+{	
 	mWindow.clear();
+	mWindow.draw(mTileMap);
 	mWindow.draw(mPlayer);
 	mWindow.draw(mStatisticsText);
 	mWindow.display();
 }
 
+
+
+
+
+
+
+
+
 void Game::updateStatistics(sf::Time elapsedTime)
 {
+
+
+
+	//handle collision
+	std::vector<sf::Sprite> mCollisionSprites = mTileMap.getCollisionSprites();
+
+	bool collision = false;
+	for (unsigned int i = 0; i < mCollisionSprites.size(); ++i)
+	{
+		collision = Collision::CircleTest(mPlayer, mCollisionSprites[i]);
+		if (collision == true){
+			mPlayer.setColor(sf::Color(255, 0, 0, 255));
+
+			std::cout << "COLLIOSN" << std::endl;
+
+		}
+
+		
+		
+	}
+
+
+
 	mStatisticsUpdateTime += elapsedTime;
 	mStatisticsNumFrames += 1;
 
@@ -115,6 +182,16 @@ void Game::updateStatistics(sf::Time elapsedTime)
 		mStatisticsNumFrames = 0;
 	}
 }
+
+
+
+
+
+
+
+
+
+
 
 void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 {

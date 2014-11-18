@@ -2,6 +2,9 @@
 #define GAME_HPP
 
 #include <SFML/Graphics.hpp>
+#include "TextureManager.hpp"
+#include "TileMap.hpp"
+#include "Collision.h"
 
 
 class Game : private sf::NonCopyable
@@ -31,11 +34,14 @@ private:
 	sf::Text				mStatisticsText;
 	sf::Time				mStatisticsUpdateTime;
 
+
 	std::size_t				mStatisticsNumFrames;
 	bool					mIsMovingUp;
 	bool					mIsMovingDown;
 	bool					mIsMovingRight;
 	bool					mIsMovingLeft;
+	TileMap					mTileMap;
 };
+
 
 #endif // GAME_HPP
