@@ -2,11 +2,24 @@
 #include "StringHelper.hpp"
 #include <iostream>
 
-const float Game::PlayerSpeed = 400.f;
+const float Game::PlayerSpeed = 50.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
+/*
+
+Antidmg buff
+unverwundbar
+heal
+timeslow
+speed debuff, sollte man nicht einsammeln
+
+täuschung wie in darksouls , mimic kiste
+
+*/
+
+
 Game::Game()
-	: mWindow(sf::VideoMode(1920,1400), "SFML Game", sf::Style::Close)
+	: mWindow(sf::VideoMode(640,800), "SFML Game", sf::Style::Close)
 	, mTexture()
 	, mPlayer()
 	, mFont()
@@ -17,7 +30,10 @@ Game::Game()
 	, mIsMovingDown(false)
 	, mIsMovingRight(false)
 	, mIsMovingLeft(false)
+	, mIsColliding(false)
 	, mTileMap(mWindow.getSize())
+	, mCollisionSprites(mTileMap.getCollisionSprites())
+	
 {
 	if (!mTexture.loadFromFile("testchar.png"))
 	{
@@ -99,10 +115,6 @@ void Game::update(sf::Time elapsedTime)
 
 
 
-	
-	
-
-	
 
 	//Handle movement
 	sf::Vector2f movement(0.f, 0.f);
@@ -115,6 +127,32 @@ void Game::update(sf::Time elapsedTime)
 	if (mIsMovingRight)
 		movement.x += PlayerSpeed;
 	mPlayer.move(movement * elapsedTime.asSeconds());
+
+	
+
+	//handle collision
+	collisionDetection();
+}
+
+
+
+void Game::collisionDetection()
+{
+	for (unsigned int i = 0; i < mCollisionSprites.size(); ++i)
+	{
+		mIsColliding = Collision::PixelPerfectTest(mPlayer, mCollisionSprites[i]);
+
+		if (mIsColliding == true){
+			mPlayer.setColor(sf::Color(255, 0, 0, 255));
+			break;
+		}
+		else
+		{
+			mPlayer.setColor(sf::Color(0, 255, 0, 255));
+		}
+
+	}
+
 }
 
 
@@ -148,24 +186,6 @@ void Game::updateStatistics(sf::Time elapsedTime)
 {
 
 
-
-	//handle collision
-	std::vector<sf::Sprite> mCollisionSprites = mTileMap.getCollisionSprites();
-
-	bool collision = false;
-	for (unsigned int i = 0; i < mCollisionSprites.size(); ++i)
-	{
-		collision = Collision::CircleTest(mPlayer, mCollisionSprites[i]);
-		if (collision == true){
-			mPlayer.setColor(sf::Color(255, 0, 0, 255));
-
-			std::cout << "COLLIOSN" << std::endl;
-
-		}
-
-		
-		
-	}
 
 
 

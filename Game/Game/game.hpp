@@ -21,7 +21,7 @@ private:
 
 	void					updateStatistics(sf::Time elapsedTime);
 	void					handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
-
+	void					collisionDetection();
 
 private:
 	static const float		PlayerSpeed;
@@ -35,12 +35,18 @@ private:
 	sf::Time				mStatisticsUpdateTime;
 
 
+
+
 	std::size_t				mStatisticsNumFrames;
 	bool					mIsMovingUp;
 	bool					mIsMovingDown;
 	bool					mIsMovingRight;
 	bool					mIsMovingLeft;
+	bool					mIsColliding;
 	TileMap					mTileMap;
+
+
+	std::vector<sf::Sprite> mCollisionSprites;
 };
 
 

@@ -12,6 +12,7 @@ public:
 	~TextureManager();
 	bool LoadTextures();
 	sf::Sprite& getRef(const std::string& texture);
+	std::map<std::string, sf::Sprite> getTiles() const; 
 
 private:
 	sf::Texture mTileSet;

@@ -24,9 +24,6 @@ TextureManager::LoadTextures()
 		return false;
 	}
 
-
-
-
 	sf::IntRect subRect;
 	subRect.left = 0;
 	subRect.top = 0;
@@ -58,4 +55,12 @@ TextureManager::getRef(const std::string& texture)
 {
 
 	return this->mTileSpirtes.at(texture);
+}
+
+
+
+std::map<std::string, sf::Sprite> 
+TextureManager::getTiles() const
+{
+	return this->mTileSpirtes;
 }
