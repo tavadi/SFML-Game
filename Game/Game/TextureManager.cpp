@@ -1,5 +1,5 @@
 #include "TextureManager.hpp"
-
+#include "Collision.h"
 
 
 TextureManager::TextureManager()
@@ -19,7 +19,8 @@ TextureManager::~TextureManager()
 bool
 TextureManager::LoadTextures()
 {
-	if (!mTileSet.loadFromFile("tileset.png"))
+
+	if (!Collision::CreateTextureAndBitmask(mTileSet, "tileset.png"))
 	{
 		return false;
 	}

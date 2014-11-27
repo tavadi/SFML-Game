@@ -46,7 +46,7 @@ private:
 	TileMap					mTileMap;
 
 
-	std::vector<sf::Sprite> mCollisionSprites;
+	std::vector<Tile> mCollisionSprites;
 };
 
 

@@ -21,7 +21,7 @@ TileMap::CreateLevel()
 {
 	const int level[] =
 	{
-		2, 2, 2, 2, 2, 0, 0, 2,
+		0, 2, 2, 2, 2, 0, 0, 2,
 		2, 0, 1, 0, 0, 1, 0, 2,
 		2, 0, 0, 0, 2, 0, 0, 2,
 		2, 0, 0, 0, 0, 2, 0, 2,
@@ -33,7 +33,7 @@ TileMap::CreateLevel()
 		2, 0, 0, 0, 0, 0, 0, 2,
 		2, 0, 0, 2, 1, 0, 0, 2,
 		2, 0, 1, 0, 0, 2, 1, 2,
-		2, 2, 2, 2, 2, 2, 2, 2,
+		2, 2, 2, 2, 2, 2, 2, 0,
 	};
 
 
@@ -49,24 +49,27 @@ TileMap::CreateLevel()
 	{
 		for (unsigned int j = 0; j < width; ++j)
 		{
-			sf::Sprite tempSprite;
-
+			Tile tempSprite;
 			switch (level[mSpritesToDraw.size()])
 			{
+				
 			case 0:
-				tempSprite = mTextureManager.getRef("Ice1");
-				tempSprite.setScale(5.0f, 5.0f);
-				tempSprite.setPosition(texturePosX, texutePosY);
+				tempSprite.setSprite(mTextureManager.getRef("Ice1"));
+				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
+				tempSprite.setTileType("Ice");
+				tempSprite.getSpriteRef().setPosition(texturePosX, texutePosY);
 				break;
 			case 1:
-				tempSprite = mTextureManager.getRef("Ice2");
-				tempSprite.setScale(5.0f, 5.0f);
-				tempSprite.setPosition(texturePosX, texutePosY);
+				tempSprite.setSprite(mTextureManager.getRef("Ice2"));
+				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
+				tempSprite.setTileType("Ice");
+				tempSprite.getSpriteRef().setPosition(texturePosX, texutePosY);
 				break;
 			case 2:
-				tempSprite = mTextureManager.getRef("Wall1");
-				tempSprite.setScale(5.0f, 5.0f);
-				tempSprite.setPosition(texturePosX, texutePosY);
+				tempSprite.setSprite(mTextureManager.getRef("Wall1"));
+				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
+				tempSprite.getSpriteRef().setPosition(texturePosX, texutePosY);
+				tempSprite.setTileType("Wall");
 				mCollisionSprites.push_back(tempSprite);
 				break;
 
@@ -95,13 +98,14 @@ TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// draw the vertex array
 	for (unsigned int i = 0; i < mSpritesToDraw.size(); ++i)
 	{
-		target.draw(mSpritesToDraw[i]);
+		
+		target.draw(mSpritesToDraw[i].getSpriteToDraw());
 	}
 
 }
 
 
-std::vector<sf::Sprite>
+std::vector<Tile>
 TileMap::getCollisionSprites() const
 {
 	return this->mCollisionSprites;

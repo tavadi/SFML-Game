@@ -2,11 +2,20 @@
 #include "StringHelper.hpp"
 #include <iostream>
 
-const float Game::PlayerSpeed = 50.0f;
+const float Game::PlayerSpeed = 500.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
 
+
+Tilefactory pattern einbauen
+
+
+
+
+
+
+---
 Antidmg buff
 unverwundbar
 heal
@@ -39,7 +48,6 @@ Game::Game()
 	{
 		// Handle loading error
 	}
-
 	mPlayer.setTexture(mTexture);
 	mPlayer.setPosition(100.f, 100.f);
 
@@ -140,10 +148,15 @@ void Game::collisionDetection()
 {
 	for (unsigned int i = 0; i < mCollisionSprites.size(); ++i)
 	{
-		mIsColliding = Collision::PixelPerfectTest(mPlayer, mCollisionSprites[i]);
+		
+		mIsColliding = Collision::PixelPerfectTest(mPlayer, mCollisionSprites[i].getSpriteRef());
 
 		if (mIsColliding == true){
-			mPlayer.setColor(sf::Color(255, 0, 0, 255));
+			
+			if (mCollisionSprites[i].getTileType() == "Wall")
+			{
+				mPlayer.setColor(sf::Color(255, 0, 0, 255));
+			}
 			break;
 		}
 		else

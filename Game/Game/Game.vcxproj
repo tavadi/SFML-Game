@@ -90,6 +90,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collision.h" />
@@ -97,6 +98,7 @@
     <ClInclude Include="TextureManager.hpp" />
     <ClInclude Include="StringHelper.hpp" />
     <ClInclude Include="TileMap.hpp" />
+    <ClInclude Include="Tile.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
