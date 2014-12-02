@@ -28,7 +28,7 @@ täuschung wie in darksouls , mimic kiste
 
 
 Game::Game()
-	: mWindow(sf::VideoMode(640,800), "SFML Game", sf::Style::Close)
+	: mWindow(sf::VideoMode(640, 800), "SFML Game", sf::Style::Close)
 	, mTexture()
 	, mPlayer()
 	, mFont()
@@ -42,6 +42,8 @@ Game::Game()
 	, mIsColliding(false)
 	, mTileMap(mWindow.getSize())
 	, mCollisionSprites(mTileMap.getCollisionSprites())
+	, mWorldView(sf::FloatRect(0, 0, 640, 800))
+	, mScrollingSpeed(-50)
 	
 {
 	if (!mTexture.loadFromFile("testchar.png"))
@@ -122,6 +124,8 @@ void Game::update(sf::Time elapsedTime)
 {
 
 
+	mWorldView.move(0.0f, mScrollingSpeed * elapsedTime.asSeconds());
+
 
 
 	//Handle movement
@@ -135,8 +139,6 @@ void Game::update(sf::Time elapsedTime)
 	if (mIsMovingRight)
 		movement.x += PlayerSpeed;
 	mPlayer.move(movement * elapsedTime.asSeconds());
-
-	
 
 	//handle collision
 	collisionDetection();
@@ -156,6 +158,11 @@ void Game::collisionDetection()
 			if (mCollisionSprites[i].getTileType() == "Wall")
 			{
 				mPlayer.setColor(sf::Color(255, 0, 0, 255));
+
+				sf::Vector2f pushDir =  (mPlayer.getPosition() - mCollisionSprites[i].getSpriteRef().getPosition());
+				pushDir.x /= 2;
+				pushDir.y /= 2;
+				mPlayer.move(pushDir);
 			}
 			break;
 		}
@@ -173,14 +180,10 @@ void Game::collisionDetection()
 
 
 
-
-
-
-
-
 void Game::render()
 {	
 	mWindow.clear();
+	mWindow.setView(mWorldView);
 	mWindow.draw(mTileMap);
 	mWindow.draw(mPlayer);
 	mWindow.draw(mStatisticsText);

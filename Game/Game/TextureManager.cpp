@@ -60,7 +60,7 @@ TextureManager::getRef(const std::string& texture)
 
 
 
-std::map<std::string, sf::Sprite> 
+std::map<std::string, sf::Sprite>
 TextureManager::getTiles() const
 {
 	return this->mTileSpirtes;

@@ -11,7 +11,7 @@ public:
 	~TileMap();
 	void CreateLevel();
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-	std::vector<Tile> getCollisionSprites() const;
+	std::vector<Tile>& getCollisionSprites();
 
 
 private:

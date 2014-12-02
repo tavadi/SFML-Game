@@ -21,19 +21,19 @@ TileMap::CreateLevel()
 {
 	const int level[] =
 	{
-		0, 2, 2, 2, 2, 0, 0, 2,
+		2, 0, 0, 0, 0, 0, 0, 2,
 		2, 0, 1, 0, 0, 1, 0, 2,
-		2, 0, 0, 0, 2, 0, 0, 2,
+		2, 0, 0, 0, 0, 0, 0, 2,
 		2, 0, 0, 0, 0, 2, 0, 2,
 		2, 0, 0, 1, 0, 0, 0, 2,
-		2, 0, 2, 0, 0, 0, 1, 2,
-		2, 0, 1, 0, 2, 0, 0, 2,
-		2, 0, 0, 0, 0, 1, 0, 2,
+		2, 0, 0, 0, 0, 0, 1, 2,
+		2, 0, 1, 0, 0, 0, 0, 2,
+		2, 0, 0, 0, 0, 0, 0, 2,
 		2, 0, 0, 0, 0, 0, 2, 2,
 		2, 0, 0, 0, 0, 0, 0, 2,
-		2, 0, 0, 2, 1, 0, 0, 2,
-		2, 0, 1, 0, 0, 2, 1, 2,
-		2, 2, 2, 2, 2, 2, 2, 0,
+		2, 0, 0, 0, 1, 0, 0, 2,
+		2, 0, 0, 0, 0, 0, 0, 2,
+		2, 2, 2, 2, 2, 2, 2, 0
 	};
 
 
@@ -45,6 +45,8 @@ TileMap::CreateLevel()
 	float texturePosX = 0;
 	float texutePosY = 0;
 	float textureSize = 80;
+
+
 	for (unsigned int i = 0; i < height; ++i)
 	{
 		for (unsigned int j = 0; j < width; ++j)
@@ -105,8 +107,8 @@ TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 
-std::vector<Tile>
-TileMap::getCollisionSprites() const
+std::vector<Tile>&
+TileMap::getCollisionSprites() 
 {
 	return this->mCollisionSprites;
 }

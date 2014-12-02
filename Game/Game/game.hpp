@@ -26,6 +26,7 @@ private:
 private:
 	static const float		PlayerSpeed;
 	static const sf::Time	TimePerFrame;
+	float					mScrollingSpeed;
 
 	sf::RenderWindow		mWindow;
 	sf::Texture				mTexture;
@@ -33,6 +34,7 @@ private:
 	sf::Font				mFont;
 	sf::Text				mStatisticsText;
 	sf::Time				mStatisticsUpdateTime;
+	sf::View				mWorldView;
 
 
 
