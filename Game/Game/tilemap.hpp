@@ -1,6 +1,6 @@
 #ifndef TILEMAP_HPP
 #define TILEMAP_HPP
-
+#include <stdlib.h>     /* srand, rand */
 #include "TextureManager.hpp"
 #include "Tile.hpp"
 
@@ -15,10 +15,20 @@ public:
 
 
 private:
+	void populateArr(int* level);
+
 	sf::Vector2u mWindowSize;
 	TextureManager mTextureManager;
 	std::vector<Tile> mSpritesToDraw;
 	std::vector<Tile> mCollisionSprites;
+	unsigned int mMapHeight;
+	unsigned int mMapWidth;
+	float mTexturePosX;
+	float mTexturePosY;
+	float mTexuteSize;
+	int mapCount;
+	unsigned int noCollisionCount;
+	int* mLevel;
 };
 
 

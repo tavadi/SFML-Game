@@ -1,89 +1,99 @@
 #include "TileMap.hpp"
 
-
 TileMap::TileMap(sf::Vector2u size)
 	:mWindowSize(size)
+	, mMapHeight(200)
+	, mMapWidth(8)
+	, mTexturePosX(0)
+	, mTexturePosY(5000)
+	, mTexuteSize(size.x/mMapWidth)
+	, mapCount(mMapHeight*mMapWidth)
+	, mLevel(new int[mapCount])
+	, noCollisionCount(1)
 {
+	this->populateArr(mLevel);
 	this->CreateLevel();
-
 }
 
 
 TileMap::~TileMap()
 {
+	delete[] mLevel;
+}
 
 
-
+void 
+TileMap::populateArr(int* level)
+{
+	
+	for (int i = 0; i < mapCount; ++i)
+	{
+		
+		if (i % mMapWidth == 0 || i % mMapWidth == 7)
+		{
+			level[i] = 2;
+		}
+		else
+		{
+			int random = rand() % 4;
+			if (noCollisionCount % 3 + random == 0 || noCollisionCount % 1 + random == 0)
+			{
+				level[i] = 2;
+				noCollisionCount++;
+			}
+			else
+			{
+				
+				level[i] = 1;
+				noCollisionCount++;
+			}
+		}
+	}
 }
 
 void
 TileMap::CreateLevel()
 {
-	const int level[] =
-	{
-		2, 0, 0, 0, 0, 0, 0, 2,
-		2, 0, 1, 0, 0, 1, 0, 2,
-		2, 0, 0, 0, 0, 0, 0, 2,
-		2, 0, 0, 0, 0, 2, 0, 2,
-		2, 0, 0, 1, 0, 0, 0, 2,
-		2, 0, 0, 0, 0, 0, 1, 2,
-		2, 0, 1, 0, 0, 0, 0, 2,
-		2, 0, 0, 0, 0, 0, 0, 2,
-		2, 0, 0, 0, 0, 0, 2, 2,
-		2, 0, 0, 0, 0, 0, 0, 2,
-		2, 0, 0, 0, 1, 0, 0, 2,
-		2, 0, 0, 0, 0, 0, 0, 2,
-		2, 2, 2, 2, 2, 2, 2, 0
-	};
 
 
 
-	unsigned int height = 13;
-	unsigned int width = 8;
-	unsigned int heightPos = 0;
-	unsigned int widthPos = 0;
-	float texturePosX = 0;
-	float texutePosY = 0;
-	float textureSize = 80;
+	 for (unsigned int i = 0; i < mMapHeight; ++i)
+	 {
+		 for (unsigned int j = 0; j < mMapWidth; ++j)
+		 {
+			 Tile tempSprite;
+			 switch (mLevel[mSpritesToDraw.size()])
+			 {
 
+			 case 0:
+				 tempSprite.setSprite(mTextureManager.getRef("Ice1"));
+				 tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
+				 tempSprite.setTileType("Ice");
+				 tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
+				 break;
+			 case 1:
+				 tempSprite.setSprite(mTextureManager.getRef("Ice2"));
+				 tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
+				 tempSprite.setTileType("Ice");
+				 tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
+				 break;
+			 case 2:
+				 tempSprite.setSprite(mTextureManager.getRef("Wall1"));
+				 tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
+				 tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
+				 tempSprite.setTileType("Wall");
+				 mCollisionSprites.push_back(tempSprite);
+				 break;
 
-	for (unsigned int i = 0; i < height; ++i)
-	{
-		for (unsigned int j = 0; j < width; ++j)
-		{
-			Tile tempSprite;
-			switch (level[mSpritesToDraw.size()])
-			{
-				
-			case 0:
-				tempSprite.setSprite(mTextureManager.getRef("Ice1"));
-				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
-				tempSprite.setTileType("Ice");
-				tempSprite.getSpriteRef().setPosition(texturePosX, texutePosY);
-				break;
-			case 1:
-				tempSprite.setSprite(mTextureManager.getRef("Ice2"));
-				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
-				tempSprite.setTileType("Ice");
-				tempSprite.getSpriteRef().setPosition(texturePosX, texutePosY);
-				break;
-			case 2:
-				tempSprite.setSprite(mTextureManager.getRef("Wall1"));
-				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
-				tempSprite.getSpriteRef().setPosition(texturePosX, texutePosY);
-				tempSprite.setTileType("Wall");
-				mCollisionSprites.push_back(tempSprite);
-				break;
-
-			default:
-				break;
-			}
-			mSpritesToDraw.push_back(tempSprite);
-			texturePosX += 80;
-		}
-		texturePosX = 0;
-		texutePosY += textureSize;
-	}
+			 default:
+				 break;
+			 }
+			 mSpritesToDraw.push_back(tempSprite);
+			 mTexturePosX += mTexuteSize;
+		 }
+		 mTexturePosX = 0;
+		 mTexturePosY -= mTexuteSize;
+	 }
 }
 
 

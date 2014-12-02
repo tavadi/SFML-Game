@@ -43,7 +43,7 @@ Game::Game()
 	, mTileMap(mWindow.getSize())
 	, mCollisionSprites(mTileMap.getCollisionSprites())
 	, mWorldView(sf::FloatRect(0, 0, 640, 800))
-	, mScrollingSpeed(-50)
+	, mScrollingSpeed(-450)
 	
 {
 	if (!mTexture.loadFromFile("testchar.png"))
@@ -52,7 +52,7 @@ Game::Game()
 	}
 	mPlayer.setTexture(mTexture);
 	mPlayer.setPosition(100.f, 100.f);
-
+	mPlayer.setScale(0.5, 0.5);
 	mFont.loadFromFile("Sansation.ttf");
 	mStatisticsText.setFont(mFont);
 	mStatisticsText.setPosition(5.f, 5.f);
@@ -125,7 +125,7 @@ void Game::update(sf::Time elapsedTime)
 
 
 	mWorldView.move(0.0f, mScrollingSpeed * elapsedTime.asSeconds());
-
+	mStatisticsText.move(0.0f, mScrollingSpeed * elapsedTime.asSeconds());
 
 
 	//Handle movement
@@ -160,8 +160,8 @@ void Game::collisionDetection()
 				mPlayer.setColor(sf::Color(255, 0, 0, 255));
 
 				sf::Vector2f pushDir =  (mPlayer.getPosition() - mCollisionSprites[i].getSpriteRef().getPosition());
-				pushDir.x /= 2;
-				pushDir.y /= 2;
+				pushDir.x /= 4;
+				pushDir.y /= 4;
 				mPlayer.move(pushDir);
 			}
 			break;
@@ -200,11 +200,7 @@ void Game::render()
 
 void Game::updateStatistics(sf::Time elapsedTime)
 {
-
-
-
-
-
+	
 	mStatisticsUpdateTime += elapsedTime;
 	mStatisticsNumFrames += 1;
 
