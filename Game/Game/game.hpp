@@ -34,6 +34,7 @@ private:
 	sf::Font				mFont;
 	sf::Text				mStatisticsText;
 	sf::Time				mStatisticsUpdateTime;
+	sf::Time				mTileMapUpdateTime;
 	sf::View				mWorldView;
 
 
@@ -48,7 +49,7 @@ private:
 	TileMap					mTileMap;
 
 
-	std::vector<Tile> mCollisionSprites;
+	std::vector<std::vector<Tile>> mCollisionSprites;
 };
 
 

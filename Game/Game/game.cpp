@@ -42,8 +42,8 @@ Game::Game()
 	, mIsColliding(false)
 	, mTileMap(mWindow.getSize())
 	, mCollisionSprites(mTileMap.getCollisionSprites())
-	, mWorldView(sf::FloatRect(0, 0, 640, 800))
-	, mScrollingSpeed(-450)
+	, mWorldView(sf::FloatRect(0, 0, 640, 720))
+	, mScrollingSpeed(-480)
 	
 {
 	if (!mTexture.loadFromFile("testchar.png"))
@@ -56,7 +56,11 @@ Game::Game()
 	mFont.loadFromFile("Sansation.ttf");
 	mStatisticsText.setFont(mFont);
 	mStatisticsText.setPosition(5.f, 5.f);
-	mStatisticsText.setCharacterSize(10);
+	mStatisticsText.setCharacterSize(20);
+	mStatisticsText.setColor(sf::Color(0, 255, 255));
+	mWorldView.setCenter(mWorldView.getCenter().x, 0.0f);
+	
+
 }
 
 
@@ -80,7 +84,6 @@ void Game::run()
 			processEvents();
 			update(TimePerFrame);
 		}
-		
 		updateStatistics(elapsedTime);
 		render();
 	}
@@ -122,12 +125,8 @@ void Game::processEvents()
 //Pass time to calculate frame independent movement speed
 void Game::update(sf::Time elapsedTime)
 {
-
-
-	mWorldView.move(0.0f, mScrollingSpeed * elapsedTime.asSeconds());
-	mStatisticsText.move(0.0f, mScrollingSpeed * elapsedTime.asSeconds());
-
-
+	
+	mTileMap.updateTileMap(mWorldView.getCenter().y);
 	//Handle movement
 	sf::Vector2f movement(0.f, 0.f);
 	if (mIsMovingUp)
@@ -138,41 +137,50 @@ void Game::update(sf::Time elapsedTime)
 		movement.x -= PlayerSpeed;
 	if (mIsMovingRight)
 		movement.x += PlayerSpeed;
+
 	mPlayer.move(movement * elapsedTime.asSeconds());
+	mWorldView.move(0.0f,-5);
+	
+	mStatisticsText.move(0.0f, -5);
+	
+
 
 	//handle collision
 	collisionDetection();
+
+
 }
 
 
 
 void Game::collisionDetection()
 {
-	for (unsigned int i = 0; i < mCollisionSprites.size(); ++i)
+	mCollisionSprites = mTileMap.getCollisionSprites();
+	for (std::vector<int>::size_type i = 0; i != mCollisionSprites.size(); i++)
 	{
-		
-		mIsColliding = Collision::PixelPerfectTest(mPlayer, mCollisionSprites[i].getSpriteRef());
-
-		if (mIsColliding == true){
-			
-			if (mCollisionSprites[i].getTileType() == "Wall")
-			{
-				mPlayer.setColor(sf::Color(255, 0, 0, 255));
-
-				sf::Vector2f pushDir =  (mPlayer.getPosition() - mCollisionSprites[i].getSpriteRef().getPosition());
-				pushDir.x /= 4;
-				pushDir.y /= 4;
-				mPlayer.move(pushDir);
-			}
-			break;
-		}
-		else
+		for (std::vector<int>::size_type j = 0; j != mCollisionSprites[i].size(); j++)
 		{
-			mPlayer.setColor(sf::Color(0, 255, 0, 255));
+			mIsColliding = Collision::PixelPerfectTest(mPlayer, mCollisionSprites[i][j].getSpriteRef());
+			if (mIsColliding == true){
+
+				if (mCollisionSprites[i][j].getTileType() == "Wall")
+				{
+					mPlayer.setColor(sf::Color(255, 0, 0, 255));
+
+					sf::Vector2f pushDir = (mPlayer.getPosition() - mCollisionSprites[i][j].getSpriteRef().getPosition());
+					pushDir.x /= 4;
+					pushDir.y /= 4;
+					mPlayer.move(pushDir);
+				}
+				break;
+
+			}
+			else
+			{
+				mPlayer.setColor(sf::Color(0, 255, 0, 255));
+			}
 		}
-
 	}
-
 }
 
 
@@ -213,6 +221,9 @@ void Game::updateStatistics(sf::Time elapsedTime)
 		mStatisticsUpdateTime -= sf::seconds(1.0f);
 		mStatisticsNumFrames = 0;
 	}
+
+
+
 }
 
 
