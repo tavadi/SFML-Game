@@ -41,7 +41,7 @@ TileMap::populateArr(int* level)
 		}
 		else
 		{
-			level[i] = 1;
+			level[i] = 0;
 			noCollisionCount++;
 		}
 	}

@@ -2,18 +2,12 @@
 #include "StringHelper.hpp"
 #include <iostream>
 
-const float Game::PlayerSpeed = 500.0f;
+const float Game::PlayerSpeed = 610.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
 
-
-Tilefactory pattern einbauen
-
-
-
-
-
+Tilefactory pattern einbauen ?
 
 ---
 Antidmg buff
@@ -139,9 +133,9 @@ void Game::update(sf::Time elapsedTime)
 		movement.x += PlayerSpeed;
 
 	mPlayer.move(movement * elapsedTime.asSeconds());
-	mWorldView.move(0.0f,-5);
+	mWorldView.move(0.0f,-10);
 	
-	mStatisticsText.move(0.0f, -5);
+	mStatisticsText.move(0.0f, -10);
 	
 
 
@@ -215,8 +209,7 @@ void Game::updateStatistics(sf::Time elapsedTime)
 	if (mStatisticsUpdateTime >= sf::seconds(1.0f))
 	{
 		mStatisticsText.setString(
-			"Frames / Second = " + toString(mStatisticsNumFrames) + "\n" +
-			"Time / Update = " + toString(mStatisticsUpdateTime.asMicroseconds() / mStatisticsNumFrames) + "us");
+			"Frames / Second = " + toString(mStatisticsNumFrames) + "\n");
 
 		mStatisticsUpdateTime -= sf::seconds(1.0f);
 		mStatisticsNumFrames = 0;
