@@ -8,12 +8,14 @@ TileMap::TileMap(sf::Vector2u size)
 	, mTexturePosY(-400)
 	, mTexuteSize(80)
 	, mapCount(mMapHeight*mMapWidth)
-	, mLevel(new int[mapCount])
+	, mLevel0(new int[mapCount])
+	, mLevel1(new int[mapCount])
+	, mLevel2(new int[mapCount])
 	, noCollisionCount(1)
 	, mapCounter(0)
 {
-	this->populateArr(mLevel);
-	this->createLevel(mCollisionSprites0, mSpritesMap0, mLevel);
+	this->populateArr(mLevel0);
+	this->createLevel(mCollisionSprites0, mSpritesMap0, mLevel0);
 
 	mSpritesToDraw.push_back(mSpritesMap0);
 
@@ -23,7 +25,9 @@ TileMap::TileMap(sf::Vector2u size)
 
 TileMap::~TileMap()
 {
-	delete[] mLevel;
+	delete[] mLevel0;
+	delete[] mLevel1;
+	delete[] mLevel2;	
 }
 
 
@@ -41,8 +45,21 @@ TileMap::populateArr(int* level)
 		}
 		else
 		{
-			level[i] = 0;
-			noCollisionCount++;
+			int randN = rand() % 8 + 5;
+			if (noCollisionCount < randN)
+			{
+				int randN = rand() % 2;
+				std::cout << randN << std::endl;
+				level[i] = 0 + randN;
+				noCollisionCount++;
+
+			}
+			else
+			{
+				level[i] = 2;
+				noCollisionCount = 0;
+			}
+
 		}
 	}
 }
@@ -57,6 +74,7 @@ TileMap::createLevel(std::vector<Tile>& Collisionmap, std::vector<Tile>& drawMap
 		 for (unsigned int j = 0; j < mMapWidth; ++j)
 		 {
 			 Tile tempSprite;
+			
 			 switch (level[drawMap.size()])
 			 {
 
@@ -96,51 +114,7 @@ TileMap::createLevel(std::vector<Tile>& Collisionmap, std::vector<Tile>& drawMap
 void
 TileMap::updateTileMap(float camPosY)
 {
-	//mCamPos = camPosY;
-	//
-	//if (mCamPos < 800
-	//	)
-	//	{
-	//		std::cout << "Delete: mCollisionSprites [" << mapCounter << "], Create: On top Position  mCollisionSprites[" << mapCounter << "]" << std::endl;
-	//		++mapCounter;
 
-	//		switch (mapCounter)
-	//		{
-	//		case 0:
-	//			this->createLevel(mCollisionSprites2, mSpritesMap2, mLevel);
-	//			mCollisionsToHandle.clear();
-	//			mCollisionsToHandle.push_back(mCollisionSprites1);
-	//			mCollisionsToHandle.push_back(mCollisionSprites2);
-	//			mSpritesToDraw.clear();
-	//			mSpritesToDraw.push_back(mSpritesMap1);
-	//			mSpritesToDraw.push_back(mSpritesMap2);
-	//			break;
-	//		case 1:
-	//			this->createLevel(mCollisionSprites0, mSpritesMap0, mLevel);
-	//			mCollisionsToHandle.clear();
-	//			mCollisionsToHandle.push_back(mCollisionSprites2);
-	//			mCollisionsToHandle.push_back(mCollisionSprites0);
-	//			mSpritesToDraw.clear();
-	//			mSpritesToDraw.push_back(mSpritesMap2);
-	//			mSpritesToDraw.push_back(mSpritesMap0);
-
-	//			break;
-	//		case 2:
-	//			this->createLevel(mCollisionSprites1, mSpritesMap1, mLevel);
-	//			mCollisionsToHandle.clear();
-	//			mCollisionsToHandle.push_back(mCollisionSprites0);
-	//			mCollisionsToHandle.push_back(mCollisionSprites1);
-	//			mSpritesToDraw.clear();
-	//			mSpritesToDraw.push_back(mSpritesMap0);
-	//			mSpritesToDraw.push_back(mSpritesMap1);
-	//			break;
-	//		case 3:
-	//			mapCounter = 0;
-	//			break;
-	//		}
-
-	////		mTileMapUpdateTime -= sf::seconds(5.0f);
-	////	}
 	if ((int)camPosY % 800 == 0 && camPosY != 0)
 	{
 		std::cout << camPosY << std::endl;
@@ -152,7 +126,8 @@ TileMap::updateTileMap(float camPosY)
 				switch (mapCounter)
 				{
 				case 0:
-					this->createLevel(mCollisionSprites1, mSpritesMap1, mLevel);
+					this->populateArr(mLevel1);
+					this->createLevel(mCollisionSprites1, mSpritesMap1, mLevel1);
 					mCollisionsToHandle.clear();
 					mCollisionsToHandle.push_back(mCollisionSprites0);
 					mCollisionsToHandle.push_back(mCollisionSprites1);
@@ -161,7 +136,8 @@ TileMap::updateTileMap(float camPosY)
 					mSpritesToDraw.push_back(mSpritesMap1);
 					break;
 				case 1:
-					this->createLevel(mCollisionSprites2, mSpritesMap2, mLevel);
+					this->populateArr(mLevel2);
+					this->createLevel(mCollisionSprites2, mSpritesMap2, mLevel2);
 					mCollisionsToHandle.clear();
 					mCollisionsToHandle.push_back(mCollisionSprites1);
 					mCollisionsToHandle.push_back(mCollisionSprites2);
@@ -171,7 +147,8 @@ TileMap::updateTileMap(float camPosY)
 
 					break;
 				case 2:
-					this->createLevel(mCollisionSprites0, mSpritesMap0, mLevel);
+					this->populateArr(mLevel0);
+					this->createLevel(mCollisionSprites0, mSpritesMap0, mLevel0);
 					mCollisionsToHandle.clear();
 					mCollisionsToHandle.push_back(mCollisionSprites2);
 					mCollisionsToHandle.push_back(mCollisionSprites0);

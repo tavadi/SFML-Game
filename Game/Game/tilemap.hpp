@@ -4,6 +4,8 @@
 #include "TextureManager.hpp"
 #include "Tile.hpp"
 #include <iostream>
+#include <stdlib.h>     /* srand, rand */
+
 
 class TileMap : public sf::Drawable, public sf::Transformable
 {
@@ -47,7 +49,10 @@ private:
 	
 	
 	unsigned int noCollisionCount;
-	int* mLevel;
+	
+	int* mLevel0;
+	int* mLevel1;
+	int* mLevel2;
 };
 
 

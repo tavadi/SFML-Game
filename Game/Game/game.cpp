@@ -2,7 +2,7 @@
 #include "StringHelper.hpp"
 #include <iostream>
 
-const float Game::PlayerSpeed = 610.0f;
+const float Game::PlayerSpeed = 700.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
@@ -162,8 +162,7 @@ void Game::collisionDetection()
 					mPlayer.setColor(sf::Color(255, 0, 0, 255));
 
 					sf::Vector2f pushDir = (mPlayer.getPosition() - mCollisionSprites[i][j].getSpriteRef().getPosition());
-					pushDir.x /= 4;
-					pushDir.y /= 4;
+
 					mPlayer.move(pushDir);
 				}
 				break;
