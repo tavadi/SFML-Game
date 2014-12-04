@@ -7,7 +7,7 @@ const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
 
-Tilefactory pattern einbauen ?
+
 
 ---
 Antidmg buff
@@ -34,15 +34,14 @@ Game::Game()
 	, mIsMovingRight(false)
 	, mIsMovingLeft(false)
 	, mIsColliding(false)
-	, mTileMap(mWindow.getSize())
-	, mCollisionSprites(mTileMap.getCollisionSprites())
 	, mWorldView(sf::FloatRect(0, 0, 640, 720))
 	, mScrollingSpeed(-480)
-	
+	, mTileMap(mWindow.getSize())
 {
+
 	if (!mTexture.loadFromFile("testchar.png"))
 	{
-		// Handle loading error
+		std::cout << "Could not load TestChar1" << std::endl;
 	}
 	mPlayer.setTexture(mTexture);
 	mPlayer.setPosition(100.f, 100.f);
@@ -53,8 +52,6 @@ Game::Game()
 	mStatisticsText.setCharacterSize(20);
 	mStatisticsText.setColor(sf::Color(0, 255, 255));
 	mWorldView.setCenter(mWorldView.getCenter().x, 0.0f);
-	
-
 }
 
 
@@ -74,7 +71,6 @@ void Game::run()
 		while (timeSinceLastUpdate > TimePerFrame)
 		{
 			timeSinceLastUpdate -= TimePerFrame;
-
 			processEvents();
 			update(TimePerFrame);
 		}
@@ -119,8 +115,8 @@ void Game::processEvents()
 //Pass time to calculate frame independent movement speed
 void Game::update(sf::Time elapsedTime)
 {
-	
 	mTileMap.updateTileMap(mWorldView.getCenter().y);
+
 	//Handle movement
 	sf::Vector2f movement(0.f, 0.f);
 	if (mIsMovingUp)
@@ -134,15 +130,9 @@ void Game::update(sf::Time elapsedTime)
 
 	mPlayer.move(movement * elapsedTime.asSeconds());
 	mWorldView.move(0.0f,-10);
-	
 	mStatisticsText.move(0.0f, -10);
-	
 
-
-	//handle collision
 	collisionDetection();
-
-
 }
 
 
@@ -155,6 +145,7 @@ void Game::collisionDetection()
 		for (std::vector<int>::size_type j = 0; j != mCollisionSprites[i].size(); j++)
 		{
 			mIsColliding = Collision::PixelPerfectTest(mPlayer, mCollisionSprites[i][j].getSpriteRef());
+			
 			if (mIsColliding == true){
 
 				if (mCollisionSprites[i][j].getTileType() == "Wall")
@@ -166,7 +157,6 @@ void Game::collisionDetection()
 					mPlayer.move(pushDir);
 				}
 				break;
-
 			}
 			else
 			{
@@ -175,8 +165,6 @@ void Game::collisionDetection()
 		}
 	}
 }
-
-
 
 
 
@@ -194,38 +182,19 @@ void Game::render()
 
 
 
-
-
-
-
-
 void Game::updateStatistics(sf::Time elapsedTime)
 {
-	
-	mStatisticsUpdateTime += elapsedTime;
-	mStatisticsNumFrames += 1;
+	//mStatisticsUpdateTime += elapsedTime;
+	//mStatisticsNumFrames += 1;
+	//if (mStatisticsUpdateTime >= sf::seconds(1.0f))
+	//{
+	//	mStatisticsText.setString(
+	//		"Frames / Second = " + toString(mStatisticsNumFrames) + "\n");
 
-	if (mStatisticsUpdateTime >= sf::seconds(1.0f))
-	{
-		mStatisticsText.setString(
-			"Frames / Second = " + toString(mStatisticsNumFrames) + "\n");
-
-		mStatisticsUpdateTime -= sf::seconds(1.0f);
-		mStatisticsNumFrames = 0;
-	}
-
-
-
+	//	mStatisticsUpdateTime -= sf::seconds(1.0f);
+	//	mStatisticsNumFrames = 0;
+	//}
 }
-
-
-
-
-
-
-
-
-
 
 
 void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)

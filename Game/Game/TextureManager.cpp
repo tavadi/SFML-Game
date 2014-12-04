@@ -16,12 +16,11 @@ TextureManager::~TextureManager()
 }
 
 
-bool
-TextureManager::LoadTextures()
+bool TextureManager::LoadTextures()
 {
-
 	if (!Collision::CreateTextureAndBitmask(mTileSet, "tileset.png"))
 	{
+		std::cout << "could not load TileSet" << std::endl;
 		return false;
 	}
 
@@ -45,23 +44,19 @@ TextureManager::LoadTextures()
 	sprite.setTextureRect(subRect);
 	this->mTileSpirtes["Ice2"] = sprite;
 
-
 	return true;
 }
 
 
 
-sf::Sprite& 
-TextureManager::getRef(const std::string& texture)
+sf::Sprite& TextureManager::getRef(const std::string& texture)
 {
-
 	return this->mTileSpirtes.at(texture);
 }
 
 
 
-std::map<std::string, sf::Sprite>
-TextureManager::getTiles() const
+std::map<std::string, sf::Sprite> TextureManager::getTiles() const
 {
 	return this->mTileSpirtes;
 }
