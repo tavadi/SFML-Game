@@ -21,10 +21,11 @@ private:
 
 	void					updateStatistics(sf::Time elapsedTime);
 	void					handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
-	void					collisionDetection();
+	bool					collisionDetection(sf::Sprite testSprite);
 
 private:
 	static const float		PlayerSpeed;
+	static const float		CameraSpeed;
 	static const sf::Time	TimePerFrame;
 	float					mScrollingSpeed;
 

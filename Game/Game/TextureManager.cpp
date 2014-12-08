@@ -45,6 +45,13 @@ bool TextureManager::LoadTextures()
 	sprite.setTextureRect(subRect);
 	this->mTileSpirtes["Ice2"] = sprite;
 
+
+
+	subRect.left = 16;
+	subRect.top = 0;
+	sprite.setTextureRect(subRect);
+	this->mTileSpirtes["Wall2"] = sprite;
+
 	return true;
 }
 

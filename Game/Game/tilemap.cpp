@@ -41,7 +41,7 @@ void TileMap::populateArr(int* level)
 	{
 		if (i % mMapWidth == 0 || i % mMapWidth == 7)
 		{
-			level[i] = 2;
+			level[i] = 3;
 		}
 		else
 		{
@@ -93,6 +93,14 @@ void TileMap::createLevel(std::vector<Tile>& Collisionmap, std::vector<Tile>& dr
 				break;
 			case 2:
 				tempSprite.setSprite(mTextureManager.getRef("Wall1"));
+				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
+				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
+				tempSprite.setTileType("Wall");
+				Collisionmap.push_back(tempSprite);
+				break;
+
+			case 3:
+				tempSprite.setSprite(mTextureManager.getRef("Wall2"));
 				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
 				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
 				tempSprite.setTileType("Wall");

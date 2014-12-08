@@ -2,7 +2,8 @@
 #include "StringHelper.hpp"
 #include <iostream>
 
-const float Game::PlayerSpeed = 100.0f;
+const float Game::PlayerSpeed = 600.0f;
+const float Game::CameraSpeed = -10.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
@@ -116,35 +117,74 @@ void Game::processEvents()
 void Game::update(sf::Time elapsedTime)
 {
 	mTileMap.updateTileMap(mWorldView.getCenter().y);
-
+	sf::Vector2f realMovement(0.f, 0.f);
 	//Handle movement
-	sf::Vector2f movement(0.f, 0.f);
-	if (mIsMovingUp)
+	if (mIsMovingUp){
+		sf::Vector2f movement(0.f, 0.f);
+		sf::Sprite testSprite(mPlayer);
 		movement.y -= PlayerSpeed;
-	if (mIsMovingDown)
+		testSprite.move(movement * elapsedTime.asSeconds());
+			if (collisionDetection(testSprite) == false)
+			{
+				realMovement.y -= PlayerSpeed;
+			}
+	}
+		
+	if (mIsMovingDown){
+		sf::Vector2f movement(0.f, 0.f);
+		sf::Sprite testSprite(mPlayer);
 		movement.y += PlayerSpeed;
-	if (mIsMovingLeft)
+		testSprite.move(movement * elapsedTime.asSeconds());
+		if (collisionDetection(testSprite) == false)
+		{
+			realMovement.y += PlayerSpeed;
+		}
+	}
+		
+	if (mIsMovingLeft){
+		sf::Vector2f movement(0.f, 0.f);
+		sf::Sprite testSprite(mPlayer);
 		movement.x -= PlayerSpeed;
-	if (mIsMovingRight)
+		testSprite.move(movement * elapsedTime.asSeconds());
+		if (collisionDetection(testSprite) == false)
+		{
+			realMovement.x -= PlayerSpeed;
+		}
+		
+
+	}
+		
+	if (mIsMovingRight){
+		sf::Vector2f movement(0.f, 0.f);
+		sf::Sprite testSprite(mPlayer);
 		movement.x += PlayerSpeed;
+		testSprite.move(movement * elapsedTime.asSeconds());
+		if (collisionDetection(testSprite) == false)
+		{
+			realMovement.x += PlayerSpeed;
+		}
+		
+	}
+		
 
-	mPlayer.move(movement * elapsedTime.asSeconds());
-	mWorldView.move(0.0f, -1);
-	mStatisticsText.move(0.0f, -10);
+	mPlayer.move(realMovement * elapsedTime.asSeconds());
+	mWorldView.move(0.0f, CameraSpeed);
+	mStatisticsText.move(0.0f, CameraSpeed);
 
-	collisionDetection();
+
 }
 
 
 
-void Game::collisionDetection()
+bool Game::collisionDetection(sf::Sprite testSprite)
 {
+	sf::Sprite inSprite = testSprite;
 	mCollisionSprites = mTileMap.getCollisionSprites();
 	for (std::vector<int>::size_type i = 0; i != mCollisionSprites.size(); i++)
 	{
 		for (std::vector<int>::size_type j = 0; j != mCollisionSprites[i].size(); j++)
 		{
-			mIsColliding = Collision::BoundingBoxTest (mPlayer, mCollisionSprites[i][j].getSpriteRef());
+			mIsColliding = Collision::PixelPerfectTest(inSprite, mCollisionSprites[i][j].getSpriteRef());
 			
 			if (mIsColliding == true){
 
@@ -154,16 +194,18 @@ void Game::collisionDetection()
 
 					sf::Vector2f pushDir = (mPlayer.getPosition() - mCollisionSprites[i][j].getSpriteRef().getPosition());
 
-					mPlayer.move(pushDir);
+					//mPlayer.move(pushDir);
 				}
-				break;
+				return true;
 			}
 			else
 			{
 				mPlayer.setColor(sf::Color(0, 255, 0, 255));
+				
 			}
 		}
 	}
+	return false;
 }
 
 
