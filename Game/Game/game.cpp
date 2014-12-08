@@ -2,7 +2,7 @@
 #include "StringHelper.hpp"
 #include <iostream>
 
-const float Game::PlayerSpeed = 700.0f;
+const float Game::PlayerSpeed = 100.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
@@ -22,7 +22,7 @@ täuschung wie in darksouls , mimic kiste
 
 
 Game::Game()
-	: mWindow(sf::VideoMode(640, 800), "SFML Game", sf::Style::Close)
+	: mWindow(sf::VideoMode(640, 800), "Infinite Runner", sf::Style::Close)
 	, mTexture()
 	, mPlayer()
 	, mFont()
@@ -86,7 +86,7 @@ void Game::run()
 void Game::processEvents()
 {
 	sf::Event event;
-	while (mWindow.pollEvent(event)) // 
+	while (mWindow.pollEvent(event))
 	{
 		switch (event.type)
 		{
@@ -129,7 +129,7 @@ void Game::update(sf::Time elapsedTime)
 		movement.x += PlayerSpeed;
 
 	mPlayer.move(movement * elapsedTime.asSeconds());
-	mWorldView.move(0.0f,-10);
+	mWorldView.move(0.0f, -1);
 	mStatisticsText.move(0.0f, -10);
 
 	collisionDetection();
@@ -144,7 +144,7 @@ void Game::collisionDetection()
 	{
 		for (std::vector<int>::size_type j = 0; j != mCollisionSprites[i].size(); j++)
 		{
-			mIsColliding = Collision::PixelPerfectTest(mPlayer, mCollisionSprites[i][j].getSpriteRef());
+			mIsColliding = Collision::BoundingBoxTest (mPlayer, mCollisionSprites[i][j].getSpriteRef());
 			
 			if (mIsColliding == true){
 
@@ -184,16 +184,16 @@ void Game::render()
 
 void Game::updateStatistics(sf::Time elapsedTime)
 {
-	//mStatisticsUpdateTime += elapsedTime;
-	//mStatisticsNumFrames += 1;
-	//if (mStatisticsUpdateTime >= sf::seconds(1.0f))
-	//{
-	//	mStatisticsText.setString(
-	//		"Frames / Second = " + toString(mStatisticsNumFrames) + "\n");
+	mStatisticsUpdateTime += elapsedTime;
+	mStatisticsNumFrames += 1;
+	if (mStatisticsUpdateTime >= sf::seconds(1.0f))
+	{
+		mStatisticsText.setString(
+			"Frames / Second = " + toString(mStatisticsNumFrames) + "\n");
 
-	//	mStatisticsUpdateTime -= sf::seconds(1.0f);
-	//	mStatisticsNumFrames = 0;
-	//}
+		mStatisticsUpdateTime -= sf::seconds(1.0f);
+		mStatisticsNumFrames = 0;
+	}
 }
 
 

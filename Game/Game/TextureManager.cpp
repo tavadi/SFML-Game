@@ -1,7 +1,6 @@
 #include "TextureManager.hpp"
 #include "Collision.h"
 
-
 TextureManager::TextureManager()
 {
 	this->LoadTextures();
@@ -20,9 +19,11 @@ bool TextureManager::LoadTextures()
 {
 	if (!Collision::CreateTextureAndBitmask(mTileSet, "tileset.png"))
 	{
-		std::cout << "could not load TileSet" << std::endl;
+		std::cout << "Could not load TileSet" << std::endl;
 		return false;
 	}
+	
+
 
 	sf::IntRect subRect;
 	subRect.left = 0;

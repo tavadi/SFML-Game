@@ -36,7 +36,7 @@ void TileMap::populateArr(int* level)
 {
 	//basic random map gen, needs rework
 	std::cout << std::endl;
-	std::cout << "NEW TileMap :" << std::endl;
+	std::cout << "Append TileMap:" << std::endl;
 	for (int i = 0; i < mTileMapCount; ++i)
 	{
 		if (i % mMapWidth == 0 || i % mMapWidth == 7)

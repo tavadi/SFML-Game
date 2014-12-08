@@ -34,7 +34,6 @@ private:
 	sf::Font				mFont;
 	sf::Text				mStatisticsText;
 	sf::Time				mStatisticsUpdateTime;
-	sf::Time				mTileMapUpdateTime;
 	sf::View				mWorldView;
 
 
