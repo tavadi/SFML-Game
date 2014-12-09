@@ -39,9 +39,13 @@ void TileMap::populateArr(int* level)
 	std::cout << "Append TileMap:" << std::endl;
 	for (int i = 0; i < mTileMapCount; ++i)
 	{
-		if (i % mMapWidth == 0 || i % mMapWidth == 7)
+		if (i % mMapWidth == 0)
 		{
 			level[i] = 3;
+		}
+		else if (i % mMapWidth == 7)
+		{
+			level[i] = 4;
 		}
 		else
 		{
@@ -100,7 +104,14 @@ void TileMap::createLevel(std::vector<Tile>& Collisionmap, std::vector<Tile>& dr
 				break;
 
 			case 3:
-				tempSprite.setSprite(mTextureManager.getRef("Wall2"));
+				tempSprite.setSprite(mTextureManager.getRef("WallL"));
+				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
+				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
+				tempSprite.setTileType("Wall");
+				Collisionmap.push_back(tempSprite);
+				break;
+			case 4:
+				tempSprite.setSprite(mTextureManager.getRef("WallR"));
 				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
 				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
 				tempSprite.setTileType("Wall");
