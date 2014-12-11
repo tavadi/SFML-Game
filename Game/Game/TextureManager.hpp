@@ -17,6 +17,7 @@ public:
 private:
 	sf::Texture mTileSet;
 	std::map<std::string, sf::Sprite> mTileSpirtes;
+	std::vector<sf::Sprite> mPlayerSprites;
 };
 
 

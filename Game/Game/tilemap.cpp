@@ -1,6 +1,7 @@
 #include "TileMap.hpp"
 
-TileMap::TileMap(sf::Vector2u size)
+
+TileMap::TileMap(sf::Vector2u size, TextureManager& texturemanager)
 	:mWindowSize(size)
 	, mMapHeight(10)
 	, mMapWidth(8)
@@ -13,6 +14,7 @@ TileMap::TileMap(sf::Vector2u size)
 	, mLevel2(new int[mTileMapCount])
 	, noCollisionCount(1)
 	, mMapCounter(0)
+	, mTextureManager(texturemanager)
 {
 	std::cout << "2 : TileMap Created" << std::endl;
 	this->populateArr(mLevel0);
@@ -80,7 +82,6 @@ void TileMap::createLevel(std::vector<Tile>& Collisionmap, std::vector<Tile>& dr
 		for (unsigned int j = 0; j < mMapWidth; ++j)
 		{
 			Tile tempSprite;
-
 			switch (level[drawMap.size()])
 			{
 			case 0:
@@ -181,25 +182,18 @@ void TileMap::updateTileMap(float camPosY)
 
 }
 
-void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	// apply the transform
-	states.transform *= getTransform();
-
-	// our particles don't use a texture
-	states.texture = NULL;
-
-	for (std::vector<int>::size_type i = 0; i != mSpritesToDraw.size(); i++)
-	{
-		for (std::vector<int>::size_type j = 0; j != mSpritesToDraw[i].size(); j++)
-		{
-			target.draw(mSpritesToDraw[i][j].getSpriteToDraw());
-		}
-	}
-}
 
 
 std::vector<std::vector<Tile>>& TileMap::getCollisionSprites()
 {
 	return this->mCollisionsToHandle;
+}
+
+
+
+
+
+std::vector<std::vector<Tile>>& TileMap::getSpritesToDraw()
+{
+	return this->mSpritesToDraw;
 }

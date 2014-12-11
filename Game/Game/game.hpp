@@ -5,6 +5,7 @@
 #include "TextureManager.hpp"
 #include "TileMap.hpp"
 #include "Collision.h"
+#include "player.hpp"
 
 
 class Game : private sf::NonCopyable
@@ -46,7 +47,10 @@ private:
 	bool					mIsMovingRight;
 	bool					mIsMovingLeft;
 	bool					mIsColliding;
+	TextureManager			mTextureManager;
 	TileMap					mTileMap;
+	Player					mPlayer1;
+	
 
 
 	std::vector<std::vector<Tile>> mCollisionSprites;

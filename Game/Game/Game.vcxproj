@@ -88,6 +88,7 @@
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Tile.cpp" />
@@ -95,6 +96,7 @@
   <ItemGroup>
     <ClInclude Include="Collision.h" />
     <ClInclude Include="game.hpp" />
+    <ClInclude Include="player.hpp" />
     <ClInclude Include="TextureManager.hpp" />
     <ClInclude Include="StringHelper.hpp" />
     <ClInclude Include="TileMap.hpp" />

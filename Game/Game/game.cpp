@@ -7,18 +7,13 @@ const float Game::CameraSpeed = -10.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
-
-
-
 ---
 Antidmg buff
 unverwundbar
 heal
 timeslow
 speed debuff, sollte man nicht einsammeln
-
 täuschung wie in darksouls , mimic kiste
-
 */
 
 
@@ -35,18 +30,15 @@ Game::Game()
 	, mIsMovingRight(false)
 	, mIsMovingLeft(false)
 	, mIsColliding(false)
-	, mWorldView(sf::FloatRect(0, 0, 640, 720))
+	, mWorldView(sf::FloatRect(0, 0, 640, 680))
 	, mScrollingSpeed(-480)
-	, mTileMap(mWindow.getSize())
+	, mTileMap(mWindow.getSize(),mTextureManager)
+	, mPlayer1(mTextureManager)
 {
 
-	if (!mTexture.loadFromFile("testchar.png"))
-	{
-		std::cout << "Could not load TestChar1" << std::endl;
-	}
-	mPlayer.setTexture(mTexture);
-	mPlayer.setPosition(100.f, 100.f);
-	mPlayer.setScale(0.5, 0.5);
+
+	mPlayer1.getSpriteRef().setPosition(100.f, 100.f);
+	mPlayer1.getSpriteRef().setScale(4, 4);
 	mFont.loadFromFile("Sansation.ttf");
 	mStatisticsText.setFont(mFont);
 	mStatisticsText.setPosition(5.f, 5.f);
@@ -121,7 +113,7 @@ void Game::update(sf::Time elapsedTime)
 	//Handle movement
 	if (mIsMovingUp){
 		sf::Vector2f movement(0.f, 0.f);
-		sf::Sprite testSprite(mPlayer);
+		sf::Sprite testSprite(mPlayer1.getSpriteRef());
 		movement.y -= PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
 			if (collisionDetection(testSprite) == false)
@@ -132,7 +124,7 @@ void Game::update(sf::Time elapsedTime)
 		
 	if (mIsMovingDown){
 		sf::Vector2f movement(0.f, 0.f);
-		sf::Sprite testSprite(mPlayer);
+		sf::Sprite testSprite(mPlayer1.getSpriteRef());
 		movement.y += PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
 		if (collisionDetection(testSprite) == false)
@@ -143,7 +135,7 @@ void Game::update(sf::Time elapsedTime)
 		
 	if (mIsMovingLeft){
 		sf::Vector2f movement(0.f, 0.f);
-		sf::Sprite testSprite(mPlayer);
+		sf::Sprite testSprite(mPlayer1.getSpriteRef());
 		movement.x -= PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
 		if (collisionDetection(testSprite) == false)
@@ -156,7 +148,7 @@ void Game::update(sf::Time elapsedTime)
 		
 	if (mIsMovingRight){
 		sf::Vector2f movement(0.f, 0.f);
-		sf::Sprite testSprite(mPlayer);
+		sf::Sprite testSprite(mPlayer1.getSpriteRef());
 		movement.x += PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
 		if (collisionDetection(testSprite) == false)
@@ -167,7 +159,8 @@ void Game::update(sf::Time elapsedTime)
 	}
 		
 
-	mPlayer.move(realMovement * elapsedTime.asSeconds());
+	mPlayer1.getSpriteRef().move(realMovement * elapsedTime.asSeconds());
+	mPlayer1.animateSpirte(elapsedTime);
 	mWorldView.move(0.0f, CameraSpeed);
 	mStatisticsText.move(0.0f, CameraSpeed);
 
@@ -190,9 +183,9 @@ bool Game::collisionDetection(sf::Sprite testSprite)
 
 				if (mCollisionSprites[i][j].getTileType() == "Wall")
 				{
-					mPlayer.setColor(sf::Color(255, 0, 0, 255));
+					mPlayer1.getSpriteRef().setColor(sf::Color(255, 0, 0, 255));
 
-					sf::Vector2f pushDir = (mPlayer.getPosition() - mCollisionSprites[i][j].getSpriteRef().getPosition());
+					//sf::Vector2f pushDir = (mPlayer.getPosition() - mCollisionSprites[i][j].getSpriteRef().getPosition());
 
 					//mPlayer.move(pushDir);
 				}
@@ -200,7 +193,7 @@ bool Game::collisionDetection(sf::Sprite testSprite)
 			}
 			else
 			{
-				mPlayer.setColor(sf::Color(0, 255, 0, 255));
+				mPlayer1.getSpriteRef().setColor(sf::Color(0, 255, 0, 255));
 				
 			}
 		}
@@ -215,8 +208,19 @@ void Game::render()
 {	
 	mWindow.clear();
 	mWindow.setView(mWorldView);
-	mWindow.draw(mTileMap);
-	mWindow.draw(mPlayer);
+
+
+	std::vector<std::vector<Tile>> tileMap = mTileMap.getSpritesToDraw();
+	for (std::vector<int>::size_type i = 0; i != tileMap.size(); ++i)
+	{
+		for (std::vector<int>::size_type j = 0; j != tileMap[i].size(); ++j)
+		{
+			mWindow.draw(tileMap[i][j].getSpriteRef());
+		}
+	}
+
+
+	mWindow.draw(mPlayer1.getSpriteRef());
 	mWindow.draw(mStatisticsText);
 	mWindow.display();
 }

@@ -7,20 +7,20 @@
 #include <math.h>  
 
 
-class TileMap : public sf::Drawable, public sf::Transformable
+class TileMap
 {
 public:
-	TileMap(sf::Vector2u size);
+	TileMap(sf::Vector2u size, TextureManager& txtmanager);
 	~TileMap();
 	void createLevel(std::vector<Tile>& collisionMap, std::vector<Tile>& drawMap, int *level);
 	void updateTileMap(float camPosY);
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 	std::vector<std::vector<Tile>>& getCollisionSprites();
+	std::vector<std::vector<Tile>>& getSpritesToDraw();
 
 private:
 	void populateArr(int* level);
 	sf::Vector2u mWindowSize;
-	TextureManager mTextureManager;
+	
 	sf::Time mTileMapUpdateTime;
 
 	std::vector<std::vector<Tile>> mSpritesToDraw;
@@ -43,7 +43,8 @@ private:
 	int noCollisionCount;
 	int* mLevel0;
 	int* mLevel1;
-	int* mLevel2;
+	int* mLevel2; 
+	TextureManager mTextureManager;
 };
 
 
