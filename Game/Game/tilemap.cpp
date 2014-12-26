@@ -85,19 +85,19 @@ void TileMap::createLevel(std::vector<Tile>& Collisionmap, std::vector<Tile>& dr
 			switch (level[drawMap.size()])
 			{
 			case 0:
-				tempSprite.setSprite(mTextureManager.getRef("Ice1"));
+				tempSprite.setSprite(mTextureManager.getSpriteRef("Ice1"));
 				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
 				tempSprite.setTileType("Ice");
 				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
 				break;
 			case 1:
-				tempSprite.setSprite(mTextureManager.getRef("Ice2"));
+				tempSprite.setSprite(mTextureManager.getSpriteRef("Ice2"));
 				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
 				tempSprite.setTileType("Ice");
 				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
 				break;
 			case 2:
-				tempSprite.setSprite(mTextureManager.getRef("Wall1"));
+				tempSprite.setSprite(mTextureManager.getSpriteRef("Wall1"));
 				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
 				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
 				tempSprite.setTileType("Wall");
@@ -105,14 +105,14 @@ void TileMap::createLevel(std::vector<Tile>& Collisionmap, std::vector<Tile>& dr
 				break;
 
 			case 3:
-				tempSprite.setSprite(mTextureManager.getRef("WallL"));
+				tempSprite.setSprite(mTextureManager.getSpriteRef("WallL"));
 				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
 				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
 				tempSprite.setTileType("Wall");
 				Collisionmap.push_back(tempSprite);
 				break;
 			case 4:
-				tempSprite.setSprite(mTextureManager.getRef("WallR"));
+				tempSprite.setSprite(mTextureManager.getSpriteRef("WallR"));
 				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
 				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
 				tempSprite.setTileType("Wall");

@@ -78,9 +78,9 @@ bool TextureManager::LoadTextures()
 
 
 
-sf::Sprite& TextureManager::getRef(const std::string& texture)
+sf::Sprite& TextureManager::getSpriteRef(const std::string& Sprite)
 {
-	return this->mTileSpirtes.at(texture);
+	return this->mTileSpirtes.at(Sprite);
 }
 
 

@@ -2,7 +2,7 @@
 #include "StringHelper.hpp"
 #include <iostream>
 
-const float Game::PlayerSpeed = 600.0f;
+
 const float Game::CameraSpeed = -10.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
@@ -20,20 +20,15 @@ täuschung wie in darksouls , mimic kiste
 Game::Game()
 	: mWindow(sf::VideoMode(640, 800), "Infinite Runner", sf::Style::Close)
 	, mTexture()
-	, mPlayer()
 	, mFont()
 	, mStatisticsText()
 	, mStatisticsUpdateTime()
 	, mStatisticsNumFrames(0)
-	, mIsMovingUp(false)
-	, mIsMovingDown(false)
-	, mIsMovingRight(false)
-	, mIsMovingLeft(false)
-	, mIsColliding(false)
 	, mWorldView(sf::FloatRect(0, 0, 640, 680))
-	, mScrollingSpeed(-480)
+	, mScrollingSpeed(-0)
 	, mTileMap(mWindow.getSize(),mTextureManager)
 	, mPlayer1(mTextureManager)
+	, mIsColliding(false)
 {
 
 
@@ -84,11 +79,11 @@ void Game::processEvents()
 		switch (event.type)
 		{
 		case sf::Event::KeyPressed:
-			handlePlayerInput(event.key.code, true);
+			mPlayer1.handlePlayerInput(event.key.code, true);
 			break;
 
 		case sf::Event::KeyReleased:
-			handlePlayerInput(event.key.code, false);
+			mPlayer1.handlePlayerInput(event.key.code, false);
 			break;
 
 		case sf::Event::Closed:
@@ -108,63 +103,13 @@ void Game::processEvents()
 //Pass time to calculate frame independent movement speed
 void Game::update(sf::Time elapsedTime)
 {
-	mTileMap.updateTileMap(mWorldView.getCenter().y);
-	sf::Vector2f realMovement(0.f, 0.f);
-	//Handle movement
-	if (mIsMovingUp){
-		sf::Vector2f movement(0.f, 0.f);
-		sf::Sprite testSprite(mPlayer1.getSpriteRef());
-		movement.y -= PlayerSpeed;
-		testSprite.move(movement * elapsedTime.asSeconds());
-			if (collisionDetection(testSprite) == false)
-			{
-				realMovement.y -= PlayerSpeed;
-			}
-	}
-		
-	if (mIsMovingDown){
-		sf::Vector2f movement(0.f, 0.f);
-		sf::Sprite testSprite(mPlayer1.getSpriteRef());
-		movement.y += PlayerSpeed;
-		testSprite.move(movement * elapsedTime.asSeconds());
-		if (collisionDetection(testSprite) == false)
-		{
-			realMovement.y += PlayerSpeed;
-		}
-	}
-		
-	if (mIsMovingLeft){
-		sf::Vector2f movement(0.f, 0.f);
-		sf::Sprite testSprite(mPlayer1.getSpriteRef());
-		movement.x -= PlayerSpeed;
-		testSprite.move(movement * elapsedTime.asSeconds());
-		if (collisionDetection(testSprite) == false)
-		{
-			realMovement.x -= PlayerSpeed;
-		}
-		
-
-	}
-		
-	if (mIsMovingRight){
-		sf::Vector2f movement(0.f, 0.f);
-		sf::Sprite testSprite(mPlayer1.getSpriteRef());
-		movement.x += PlayerSpeed;
-		testSprite.move(movement * elapsedTime.asSeconds());
-		if (collisionDetection(testSprite) == false)
-		{
-			realMovement.x += PlayerSpeed;
-		}
-		
-	}
-		
-
-	mPlayer1.getSpriteRef().move(realMovement * elapsedTime.asSeconds());
+	mPlayer1.handleMovement(elapsedTime);
 	mPlayer1.animateSpirte(elapsedTime);
-	mWorldView.move(0.0f, CameraSpeed);
-	mStatisticsText.move(0.0f, CameraSpeed);
+	mTileMap.updateTileMap(mWorldView.getCenter().y);
+	
 
-
+	mWorldView.move(0.0f, -2);
+	mStatisticsText.move(0.0f, -2);
 }
 
 
@@ -208,8 +153,6 @@ void Game::render()
 {	
 	mWindow.clear();
 	mWindow.setView(mWorldView);
-
-
 	std::vector<std::vector<Tile>> tileMap = mTileMap.getSpritesToDraw();
 	for (std::vector<int>::size_type i = 0; i != tileMap.size(); ++i)
 	{
@@ -243,14 +186,3 @@ void Game::updateStatistics(sf::Time elapsedTime)
 }
 
 
-void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
-{
-	if (key == sf::Keyboard::W)
-		mIsMovingUp = isPressed;
-	else if (key == sf::Keyboard::S)
-		mIsMovingDown = isPressed;
-	else if (key == sf::Keyboard::A)
-		mIsMovingLeft = isPressed;
-	else if (key == sf::Keyboard::D)
-		mIsMovingRight = isPressed;
-}

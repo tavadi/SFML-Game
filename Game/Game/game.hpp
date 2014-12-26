@@ -13,7 +13,7 @@ class Game : private sf::NonCopyable
 public:
 	Game();
 	void					run();
-
+	bool					collisionDetection(sf::Sprite testSprite);
 
 private:
 	void					processEvents();
@@ -21,32 +21,26 @@ private:
 	void					render();
 
 	void					updateStatistics(sf::Time elapsedTime);
-	void					handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
-	bool					collisionDetection(sf::Sprite testSprite);
+
 
 private:
-	static const float		PlayerSpeed;
+
 	static const float		CameraSpeed;
 	static const sf::Time	TimePerFrame;
 	float					mScrollingSpeed;
 
 	sf::RenderWindow		mWindow;
 	sf::Texture				mTexture;
-	sf::Sprite				mPlayer;
 	sf::Font				mFont;
 	sf::Text				mStatisticsText;
 	sf::Time				mStatisticsUpdateTime;
 	sf::View				mWorldView;
-
+	bool					mIsColliding;
 
 
 
 	std::size_t				mStatisticsNumFrames;
-	bool					mIsMovingUp;
-	bool					mIsMovingDown;
-	bool					mIsMovingRight;
-	bool					mIsMovingLeft;
-	bool					mIsColliding;
+
 	TextureManager			mTextureManager;
 	TileMap					mTileMap;
 	Player					mPlayer1;
