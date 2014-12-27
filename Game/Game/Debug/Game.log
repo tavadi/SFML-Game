@@ -1,33 +1,19 @@
-﻿Build started 26.12.2014 00:30:55.
-     1>Project "C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Game\Game.vcxproj" on node 2 (Build target(s)).
+﻿Build started 27.12.2014 02:31:33.
+     1>Project "C:\Users\beni\Documents\GitHub\SFML-Game\Game\Game\Game.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\beni\Source\Repos\SFML-Game\Game\SFML\include" /I"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\SFML\include" /Zi /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Player.cpp game.cpp main.cpp
-         main.cpp
-     1>c:\users\benjamin\documents\github\sfml-game\game\game\player.hpp(16): error C2061: syntax error : identifier 'Game'
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\beni\Source\Repos\SFML-Game\Game\SFML\include" /I"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\SFML\include" /Zi /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt game.cpp
          game.cpp
-     1>c:\users\benjamin\documents\github\sfml-game\game\game\player.hpp(16): error C2061: syntax error : identifier 'Game'
-         Player.cpp
-     1>c:\users\benjamin\documents\github\sfml-game\game\game\player.hpp(16): error C2061: syntax error : identifier 'Game'
-     1>Player.cpp(12): error C2655: 'Player::PlayerSpeed' : definition or redeclaration illegal in current scope
-                 c:\users\benjamin\documents\github\sfml-game\game\game\player.hpp(24) : see declaration of 'Player::PlayerSpeed'
-     1>Player.cpp(12): error C2374: 'PlayerSpeed' : redefinition; multiple initialization
-                 c:\users\benjamin\documents\github\sfml-game\game\game\player.hpp(24) : see declaration of 'PlayerSpeed'
-     1>Player.cpp(78): error C2061: syntax error : identifier 'Game'
-     1>Player.cpp(87): error C2065: 'game' : undeclared identifier
-     1>Player.cpp(87): error C2228: left of '.collisionDetection' must have class/struct/union
-                 type is 'unknown-type'
-     1>Player.cpp(98): error C2065: 'game' : undeclared identifier
-     1>Player.cpp(98): error C2228: left of '.collisionDetection' must have class/struct/union
-                 type is 'unknown-type'
-     1>Player.cpp(109): error C2065: 'game' : undeclared identifier
-     1>Player.cpp(109): error C2228: left of '.collisionDetection' must have class/struct/union
-                 type is 'unknown-type'
-     1>Player.cpp(122): error C2065: 'game' : undeclared identifier
-     1>Player.cpp(122): error C2228: left of '.collisionDetection' must have class/struct/union
-                 type is 'unknown-type'
-         Generating Code...
-     1>Done Building Project "C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Game\Game.vcxproj" (Build target(s)) -- FAILED.
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\beni\Documents\GitHub\SFML-Game\Game\Debug\Game.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\beni\Documents\GitHub\SFML-Game\Game\SFML\lib\Debug" /LIBPATH:"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\SFML\lib\Debug" "sfml-graphics-d.lib" "sfml-window-d.lib" "sfml-system-d.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\beni\Documents\GitHub\SFML-Game\Game\Debug\Game.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\beni\Documents\GitHub\SFML-Game\Game\Debug\Game.lib" /MACHINE:X86 Debug\Collision.obj
+         Debug\game.obj
+         Debug\main.obj
+         Debug\Player.obj
+         Debug\TextureManager.obj
+         Debug\TileMap.obj
+         Debug\Tile.obj
+         Game.vcxproj -> C:\Users\beni\Documents\GitHub\SFML-Game\Game\Debug\Game.exe
+     1>Done Building Project "C:\Users\beni\Documents\GitHub\SFML-Game\Game\Game\Game.vcxproj" (Build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:01.69
+Time Elapsed 00:00:01.34

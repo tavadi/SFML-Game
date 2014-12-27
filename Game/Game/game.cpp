@@ -1,9 +1,9 @@
-#include "game.hpp"
+ï»¿#include "game.hpp"
 #include "StringHelper.hpp"
 #include <iostream>
 
-
-const float Game::CameraSpeed = -10.0f;
+const float Game::PlayerSpeed = 300.0f;
+const float Game::CameraSpeed = -5.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
@@ -13,27 +13,33 @@ unverwundbar
 heal
 timeslow
 speed debuff, sollte man nicht einsammeln
-täuschung wie in darksouls , mimic kiste
+tï¿½uschung wie in darksouls , mimic kiste
 */
 
 
 Game::Game()
 	: mWindow(sf::VideoMode(640, 800), "Infinite Runner", sf::Style::Close)
 	, mTexture()
+	, mPlayer()
 	, mFont()
 	, mStatisticsText()
 	, mStatisticsUpdateTime()
 	, mStatisticsNumFrames(0)
 	, mWorldView(sf::FloatRect(0, 0, 640, 680))
-	, mScrollingSpeed(-0)
-	, mTileMap(mWindow.getSize(),mTextureManager)
+	, mScrollingSpeed(-480)
+	, mTileMap(mWindow.getSize(), mTextureManager)
 	, mPlayer1(mTextureManager)
-	, mIsColliding(false)
 {
 
 
 	mPlayer1.getSpriteRef().setPosition(100.f, 100.f);
 	mPlayer1.getSpriteRef().setScale(4, 4);
+	mPlayerStats.isAlive = false;
+	mPlayerStats.mIsColliding = false;
+	mPlayerStats.mIsMovingDown = false;
+	mPlayerStats.mIsMovingUp = false;
+	mPlayerStats.mIsMovingLeft = false;
+	mPlayerStats.mIsMovingRight = false;
 	mFont.loadFromFile("Sansation.ttf");
 	mStatisticsText.setFont(mFont);
 	mStatisticsText.setPosition(5.f, 5.f);
@@ -79,11 +85,11 @@ void Game::processEvents()
 		switch (event.type)
 		{
 		case sf::Event::KeyPressed:
-			mPlayer1.handlePlayerInput(event.key.code, true);
+			handlePlayerInput(event.key.code, true);
 			break;
 
 		case sf::Event::KeyReleased:
-			mPlayer1.handlePlayerInput(event.key.code, false);
+			handlePlayerInput(event.key.code, false);
 			break;
 
 		case sf::Event::Closed:
@@ -97,19 +103,62 @@ void Game::processEvents()
 
 
 
-
-
-
 //Pass time to calculate frame independent movement speed
 void Game::update(sf::Time elapsedTime)
 {
-	mPlayer1.handleMovement(elapsedTime);
-	mPlayer1.animateSpirte(elapsedTime);
 	mTileMap.updateTileMap(mWorldView.getCenter().y);
+	sf::Vector2f realMovement(0.f, 0.f);
+	//Handle movement
 	
+	if (mPlayerStats.mIsMovingUp){
+		sf::Vector2f movement(0.f, 0.f);
+		sf::Sprite testSprite(mPlayer1.getSpriteRef());
+		movement.y -= PlayerSpeed;
+		testSprite.move(movement * elapsedTime.asSeconds());
+		if (collisionDetection(testSprite) == false)
+		{
+			realMovement.y -= PlayerSpeed;
+		}
+	}
 
-	mWorldView.move(0.0f, -2);
-	mStatisticsText.move(0.0f, -2);
+	if (mPlayerStats.mIsMovingDown){
+		sf::Vector2f movement(0.f, 0.f);
+		sf::Sprite testSprite(mPlayer1.getSpriteRef());
+		movement.y += PlayerSpeed;
+		testSprite.move(movement * elapsedTime.asSeconds());
+		if (collisionDetection(testSprite) == false)
+		{
+			realMovement.y += PlayerSpeed;
+		}
+	}
+
+	if (mPlayerStats.mIsMovingLeft){
+		sf::Vector2f movement(0.f, 0.f);
+		sf::Sprite testSprite(mPlayer1.getSpriteRef());
+		movement.x -= PlayerSpeed;
+		testSprite.move(movement * elapsedTime.asSeconds());
+		if (collisionDetection(testSprite) == false)
+		{
+			realMovement.x -= PlayerSpeed;
+		}
+	}
+
+	if (mPlayerStats.mIsMovingRight){
+		sf::Vector2f movement(0.f, 0.f);
+		sf::Sprite testSprite(mPlayer1.getSpriteRef());
+		movement.x += PlayerSpeed;
+		testSprite.move(movement * elapsedTime.asSeconds());
+		if (collisionDetection(testSprite) == false)
+		{
+			realMovement.x += PlayerSpeed;
+		}
+	}
+	mPlayer1.move(realMovement * elapsedTime.asSeconds());
+	mPlayer1.animateSpirte(elapsedTime, mPlayerStats);
+	mWorldView.move(0.0f, CameraSpeed);
+	mStatisticsText.move(0.0f, CameraSpeed);
+
+
 }
 
 
@@ -122,9 +171,9 @@ bool Game::collisionDetection(sf::Sprite testSprite)
 	{
 		for (std::vector<int>::size_type j = 0; j != mCollisionSprites[i].size(); j++)
 		{
-			mIsColliding = Collision::PixelPerfectTest(inSprite, mCollisionSprites[i][j].getSpriteRef());
-			
-			if (mIsColliding == true){
+			mPlayerStats.mIsColliding = Collision::PixelPerfectTest(inSprite, mCollisionSprites[i][j].getSpriteRef());
+
+			if (mPlayerStats.mIsColliding == true){
 
 				if (mCollisionSprites[i][j].getTileType() == "Wall")
 				{
@@ -139,7 +188,7 @@ bool Game::collisionDetection(sf::Sprite testSprite)
 			else
 			{
 				mPlayer1.getSpriteRef().setColor(sf::Color(0, 255, 0, 255));
-				
+
 			}
 		}
 	}
@@ -150,9 +199,11 @@ bool Game::collisionDetection(sf::Sprite testSprite)
 
 
 void Game::render()
-{	
+{
 	mWindow.clear();
 	mWindow.setView(mWorldView);
+
+
 	std::vector<std::vector<Tile>> tileMap = mTileMap.getSpritesToDraw();
 	for (std::vector<int>::size_type i = 0; i != tileMap.size(); ++i)
 	{
@@ -186,3 +237,14 @@ void Game::updateStatistics(sf::Time elapsedTime)
 }
 
 
+void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
+{
+	if (key == sf::Keyboard::W)
+		mPlayerStats.mIsMovingUp = isPressed;
+	else if (key == sf::Keyboard::S)
+		mPlayerStats.mIsMovingDown = isPressed;
+	else if (key == sf::Keyboard::A)
+		mPlayerStats.mIsMovingLeft = isPressed;
+	else if (key == sf::Keyboard::D)
+		mPlayerStats.mIsMovingRight = isPressed;
+}
