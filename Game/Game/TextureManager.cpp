@@ -81,34 +81,34 @@ bool TextureManager::LoadTextures()
 	subRect.left = 0;
 	subRect.top = 32;
 	sprite.setTextureRect(subRect);
-	this->mTileSpirtes["PlayerRight1"] = sprite;
+	this->mTileSpirtes["PlayerDown1"] = sprite;
 
 	subRect.left = 16;
 	subRect.top = 32;
 	sprite.setTextureRect(subRect);
-	this->mTileSpirtes["PlayerRight2"] = sprite;
+	this->mTileSpirtes["PlayerDown2"] = sprite;
 	
 	subRect.left = 32;
 	subRect.top = 32;
 	sprite.setTextureRect(subRect);
-	this->mTileSpirtes["PlayerRight3"] = sprite;
+	this->mTileSpirtes["PlayerDown3"] = sprite;
 
 	//----------------------------------
 
 	subRect.left = 0;
 	subRect.top = 48;
 	sprite.setTextureRect(subRect);
-	this->mTileSpirtes["PlayerDown1"] = sprite;
+	this->mTileSpirtes["PlayerRight1"] = sprite;
 
 	subRect.left = 16;
 	subRect.top = 48;
 	sprite.setTextureRect(subRect);
-	this->mTileSpirtes["PlayerDown2"] = sprite;
+	this->mTileSpirtes["PlayerRight2"] = sprite;
 
 	subRect.left = 32;
 	subRect.top = 48;
 	sprite.setTextureRect(subRect);
-	this->mTileSpirtes["PlayerDown3"] = sprite;
+	this->mTileSpirtes["PlayerRight3"] = sprite;
 
 
 	//----------------------------------

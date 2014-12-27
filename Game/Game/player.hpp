@@ -27,6 +27,7 @@ private:
 	std::vector<sf::Sprite> mAnimationSpritesDown;
 	std::vector<sf::Sprite> mAnimationSpritesLeft;
 	std::vector<sf::Sprite> mAnimationSpritesRight;
+	void loadAnimations(std::vector<sf::Sprite>& animVec, const std::string& animName, const size_t animCount);
 	sf::Time mElapsedTime;
 	size_t mCurrentAnimSprite;
 	

@@ -3,7 +3,7 @@
 #include <iostream>
 
 const float Game::PlayerSpeed = 300.0f;
-const float Game::CameraSpeed = -5.0f;
+const float Game::CameraSpeed = -0.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
