@@ -1,25 +1,23 @@
-#ifndef PLAYER_HPP
-#define PLAYER_HPP
+#ifndef PROJECTILE_HPP
+#define PROJECTILE_HPP
 
 #include <SFML/Graphics.hpp>
-#include "AnimationManager.hpp"
+#include "GameObject.hpp"
 
-
-class Projectile : public sf::Transformable
+class Projectile : public GameObject
 {
 public:
-	Projectile();
+	Projectile(std::vector<sf::Sprite> animations);
 	~Projectile();
 	void		animate(sf::Time elapsedTime);
-	void		shoot(sf::Vector2f position, float rotation, float speed);
+	void		shoot(sf::Vector2f position, float speed);
 
 private:
-	sf::Sprite* mPorjectileSprite;
 	std::vector<sf::Sprite> mAnimationSprites;
-	sf::Sprite getSpriteRef();
 	float mSpeed;
+	size_t mAnimationCount;
 	
 };
 
 
-#endif // PALYER_HPP
+#endif // PROJECTILE_HPP

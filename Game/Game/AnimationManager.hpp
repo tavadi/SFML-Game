@@ -18,7 +18,7 @@ public:
 
 private:
 	TextureManager mTexutureManager;
-	sf::Sprite* mPlayerSprite;
+	sf::Sprite* mGameObjectSprite;
 };
 
 

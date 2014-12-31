@@ -1,33 +1,21 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-#include <SFML/Graphics.hpp>
-#include "TextureManager.hpp"
-#include "playerStats.hpp"
-#include "AnimationManager.hpp"
-class projectile
-{
+#include "GameObject.hpp"
+#include "projectile.hpp"
 
-
-};
-
-
-
-
-class Player : public sf::Transformable
+class Player : public GameObject
 {
 public:
 	Player::Player(TextureManager& texturemanager);
 	Player::~Player();
 	std::string getTileType() const;
 	sf::Sprite getSpriteToDraw() const;
-	sf::Sprite getSpriteRef();
-	void animateSpirte(sf::Time timeSinceLastUpdate, PlayerStats stats);
-	void shoot(sf::Time timeSinceLastUpdate, projectile projectile);
-
+	void update(sf::Time timeSinceLastUpdate, PlayerStats stats);
+	void shoot(sf::Time timeSinceLastUpdate, Projectile projectile);
+	std::vector<Projectile> mProjectiles;
 private:
 	PlayerStats* playerStats;
-	sf::Sprite* mPlayerSprite;
 	int mPlayerHealth;
 	TextureManager mTexutureManager;
 	AnimationManager anim;
@@ -36,9 +24,10 @@ private:
 	std::vector<sf::Sprite> mAnimationSpritesDown;
 	std::vector<sf::Sprite> mAnimationSpritesLeft;
 	std::vector<sf::Sprite> mAnimationSpritesRight;
-	std::vector<sf::Sprite> mProjectiles;
+	std::vector<sf::Sprite> mProjectilesSprites;
+	
+	Projectile* mCurrentProjectile;
 	void loadAnimations(std::vector<sf::Sprite>& animVec, const std::string& animName, const size_t animCount);
-	sf::Time mElapsedTime;
 	size_t mCurrentAnimSprite;
 	
 	

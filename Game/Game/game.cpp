@@ -153,7 +153,7 @@ void Game::update(sf::Time elapsedTime)
 		}
 	}
 	mPlayer1.move(realMovement * elapsedTime.asSeconds());
-	mPlayer1.animateSpirte(elapsedTime, mPlayerStats);
+	mPlayer1.update(elapsedTime, mPlayerStats);
 	mWorldView.move(0.0f, CameraSpeed);
 	mStatisticsText.move(0.0f, CameraSpeed);
 
@@ -211,8 +211,12 @@ void Game::render()
 			mWindow.draw(tileMap[i][j].getSpriteRef());
 		}
 	}
+	std::vector<Projectile> projectiles = mPlayer1.mProjectiles;
 
-
+	for (std::vector<int>::size_type i = 0; i != projectiles.size(); ++i)
+	{
+		mWindow.draw(projectiles[i].getSpriteRef());
+	}
 	mWindow.draw(mPlayer1.getSpriteRef());
 	mWindow.draw(mStatisticsText);
 	mWindow.display();
@@ -246,4 +250,6 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 		mPlayerStats.mIsMovingLeft = isPressed;
 	else if (key == sf::Keyboard::D)
 		mPlayerStats.mIsMovingRight = isPressed;
+	else if (key == sf::Keyboard::Space)
+		mPlayerStats.isShooting = isPressed;
 }

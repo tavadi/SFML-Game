@@ -6,10 +6,11 @@ Player::Player(TextureManager& texturemanager)
 	, anim(texturemanager)
 {
 	anim.loadAnimations(mAnimationSpritesUp, "PlayerUp", 3);
-	anim.loadAnimations(mAnimationSpritesRight, "PlayerRight", 3);
-	anim.loadAnimations(mAnimationSpritesLeft, "PlayerLeft", 3);
-	anim.loadAnimations(mAnimationSpritesDown, "PlayerDown", 3);
-	this->mPlayerSprite = &mAnimationSpritesUp[0];
+	//anim.loadAnimations(mAnimationSpritesRight, "PlayerRight", 3);
+	//anim.loadAnimations(mAnimationSpritesDown, "PlayerDown", 3);
+	anim.loadAnimations(mProjectilesSprites, "Projectile", 3);
+	mCurrentProjectile = new Projectile(mProjectilesSprites);
+	this->mGameObjectSprite = &mAnimationSpritesUp[0];
 }
 
 void Player::loadAnimations(std::vector<sf::Sprite>& animVec, const std::string& animName, const size_t numberofSprites)
@@ -30,19 +31,25 @@ Player::~Player()
 }
 
 
-void Player::shoot(sf::Time timeSinceLastUpdate, projectile projectile)
+void Player::shoot(sf::Time timeSinceLastUpdate, Projectile projectile)
 {
-
-
+		projectile.shoot(this->getPosition(), 10.0f);
+		mProjectiles.push_back(projectile);
+		std::cout << "Shooting" << std::endl;
 }
 
 //TODO: FIX: figur bewegt sich nicht weil die jeweiligen sprites ihre eigene position haben
 
-void Player::animateSpirte(sf::Time timeSinceLastUpdate,PlayerStats stats)
+void Player::update(sf::Time timeSinceLastUpdate,PlayerStats stats)
 {
+	for (std::vector<int>::size_type i = 0; i != mProjectiles.size(); i++)
+	{
+		mProjectiles[i].animate(timeSinceLastUpdate);
+	}
 	mElapsedTime += timeSinceLastUpdate;
 	static int UpSideAnimCounter = 1;
 	
+	//Movement
 	if (stats.isAlive == true && 
 		(stats.mIsMovingDown == true ||
 		stats.mIsMovingLeft == true ||
@@ -59,20 +66,23 @@ void Player::animateSpirte(sf::Time timeSinceLastUpdate,PlayerStats stats)
 		if (mElapsedTime >= sf::seconds(0.20f))
 		{
 			mCurrentAnimSprite += UpSideAnimCounter;
-			this->mPlayerSprite = &mAnimationSpritesUp[mCurrentAnimSprite];
+			this->mGameObjectSprite = &mAnimationSpritesUp[mCurrentAnimSprite];
 			mElapsedTime -= sf::seconds(0.20f);
 		}
 	}
-		
-		mAnimationSpritesUp[mCurrentAnimSprite].setPosition(this->getPosition());
+	mAnimationSpritesUp[mCurrentAnimSprite].setPosition(this->getPosition());
 
-	
+	//Shooting
+	static sf::Time shootElapsedTime;
+	shootElapsedTime += timeSinceLastUpdate;
+	if (stats.isShooting == true && shootElapsedTime >= sf::seconds(0.5f))
+	{
+		this->shoot(timeSinceLastUpdate, *mCurrentProjectile);
+		shootElapsedTime -= shootElapsedTime;
+	}
+
 }
 
 
 
-sf::Sprite Player::getSpriteRef()
-{
-	return *mPlayerSprite;
-}
 

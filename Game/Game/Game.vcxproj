@@ -88,6 +88,7 @@
     <ClCompile Include="AnimationManager.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="projectile.cpp" />
@@ -99,6 +100,7 @@
     <ClInclude Include="AnimationManager.hpp" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="game.hpp" />
+    <ClInclude Include="GameObject.hpp" />
     <ClInclude Include="player.hpp" />
     <ClInclude Include="playerStats.hpp" />
     <ClInclude Include="projectile.hpp" />

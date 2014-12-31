@@ -98,35 +98,35 @@ bool TextureManager::LoadTextures()
 	subRect.left = 0;
 	subRect.top = 48;
 	sprite.setTextureRect(subRect);
-	this->mTileSpirtes["PlayerRight1"] = sprite;
+	this->mTileSpirtes["Projectile1"] = sprite;
 
 	subRect.left = 16;
 	subRect.top = 48;
 	sprite.setTextureRect(subRect);
-	this->mTileSpirtes["PlayerRight2"] = sprite;
+	this->mTileSpirtes["Projectile2"] = sprite;
 
 	subRect.left = 32;
 	subRect.top = 48;
 	sprite.setTextureRect(subRect);
-	this->mTileSpirtes["PlayerRight3"] = sprite;
+	this->mTileSpirtes["Projectile3"] = sprite;
 
 
-	//----------------------------------
+	////----------------------------------
 
-	subRect.left = 0;
-	subRect.top = 64;
-	sprite.setTextureRect(subRect);
-	this->mTileSpirtes["PlayerLeft1"] = sprite;
+	//subRect.left = 0;
+	//subRect.top = 64;
+	//sprite.setTextureRect(subRect);
+	//this->mTileSpirtes["Projectile1"] = sprite;
 
-	subRect.left = 16;
-	subRect.top = 64;
-	sprite.setTextureRect(subRect);
-	this->mTileSpirtes["PlayerLeft2"] = sprite;
+	//subRect.left = 16;
+	//subRect.top = 64;
+	//sprite.setTextureRect(subRect);
+	//this->mTileSpirtes["Projectile2"] = sprite;
 
-	subRect.left = 32;
-	subRect.top = 64;
-	sprite.setTextureRect(subRect);
-	this->mTileSpirtes["PlayerLeft3"] = sprite;
+	//subRect.left = 32;
+	//subRect.top = 64;
+	//sprite.setTextureRect(subRect);
+	//this->mTileSpirtes["Projectile3"] = sprite;
 
 
 	return true;
