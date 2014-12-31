@@ -6,4 +6,5 @@ struct PlayerStats
 	bool					mIsMovingLeft;
 	bool					mIsColliding;
 	bool					isAlive;
+	bool					isShooting;
 };

@@ -3,7 +3,7 @@
 #include <iostream>
 
 const float Game::PlayerSpeed = 300.0f;
-const float Game::CameraSpeed = -0.0f;
+const float Game::CameraSpeed = -2.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
@@ -30,16 +30,15 @@ Game::Game()
 	, mTileMap(mWindow.getSize(), mTextureManager)
 	, mPlayer1(mTextureManager)
 {
-
-
 	mPlayer1.getSpriteRef().setPosition(100.f, 100.f);
 	mPlayer1.getSpriteRef().setScale(4, 4);
-	mPlayerStats.isAlive = false;
+	mPlayerStats.isAlive = true;
 	mPlayerStats.mIsColliding = false;
 	mPlayerStats.mIsMovingDown = false;
 	mPlayerStats.mIsMovingUp = false;
 	mPlayerStats.mIsMovingLeft = false;
 	mPlayerStats.mIsMovingRight = false;
+	mPlayerStats.isShooting = false;
 	mFont.loadFromFile("Sansation.ttf");
 	mStatisticsText.setFont(mFont);
 	mStatisticsText.setPosition(5.f, 5.f);
