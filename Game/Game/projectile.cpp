@@ -1,36 +1,43 @@
 #include "projectile.hpp"
 
-Projectile::Projectile(std::vector<sf::Sprite> animations)
-	:mAnimationSprites(animations)
+
+
+
+Projectile::Projectile(sf::Sprite sprite, float projectileSpeed, sf::Vector2f position)
+	: mProjectileSpeed(projectileSpeed)
+	, posi(position)
 {
-	this->mGameObjectSprite = &mAnimationSprites[0];
+	sprite.setPosition(position);
+	this->setSprite(sprite);
+
 }
 
 Projectile::~Projectile()
 {
 }
 
-void Projectile::shoot(sf::Vector2f position, float speed)
+sf::Sprite& Projectile::getSpriteRef()
 {
-	this->mGameObjectSprite = &mAnimationSprites[0];
-	this->mAnimationSprites[0].setPosition(position);
-	this->setPosition(position);
-	this->mSpeed = speed;
+	return this->mProjectileSprite;
 }
 
-void Projectile::animate(sf::Time elapsedTime)
+
+void Projectile::update(sf::Time elapsedTime)
 {
-	mElapsedTime += elapsedTime;
-	if (mElapsedTime >= sf::seconds(0.5f))
+	static sf::Time timePassed;
+	timePassed += elapsedTime;
+	if (timePassed >= sf::seconds(1.0f))
 	{
-		mAnimationCount++;
-		if (mAnimationCount == 3)
-		{
-			mAnimationCount = 0;
-		}
-		this->mAnimationSprites[mAnimationCount].setPosition(this->getPosition());
-		this->mGameObjectSprite = &mAnimationSprites[mAnimationCount];
-		mElapsedTime -= sf::seconds(0.5f);
+		std::cout << "ASD" << std::endl;
+		mProjectileSprite.setPosition(posi.x,mProjectileSprite.getPosition().y + 10);
+		timePassed -= sf::seconds(1.0f);
 	}
+
 }
 
+
+
+void Projectile::setSprite(sf::Sprite sprite)
+{
+	this->mProjectileSprite = sprite;
+}

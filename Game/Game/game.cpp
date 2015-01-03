@@ -3,7 +3,7 @@
 #include <iostream>
 
 const float Game::PlayerSpeed = 300.0f;
-const float Game::CameraSpeed = -2.0f;
+const float Game::CameraSpeed = -0.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
@@ -211,12 +211,15 @@ void Game::render()
 			mWindow.draw(tileMap[i][j].getSpriteRef());
 		}
 	}
-	std::vector<Projectile> projectiles = mPlayer1.mProjectiles;
-
-	for (std::vector<int>::size_type i = 0; i != projectiles.size(); ++i)
+	std::vector<Projectile> projectiles = mPlayer1.getProjectiles();
+	if (projectiles.size() != 0)
 	{
-		mWindow.draw(projectiles[i].getSpriteRef());
+		for (std::vector<int>::size_type i = 0; i != projectiles.size(); ++i)
+		{
+			mWindow.draw(projectiles[i].getSpriteRef());
+		}
 	}
+
 	mWindow.draw(mPlayer1.getSpriteRef());
 	mWindow.draw(mStatisticsText);
 	mWindow.display();

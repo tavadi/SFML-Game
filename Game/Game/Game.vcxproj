@@ -91,7 +91,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="projectile.cpp" />
+    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Tile.cpp" />
@@ -103,7 +103,7 @@
     <ClInclude Include="GameObject.hpp" />
     <ClInclude Include="player.hpp" />
     <ClInclude Include="playerStats.hpp" />
-    <ClInclude Include="projectile.hpp" />
+    <ClInclude Include="Projectile.hpp" />
     <ClInclude Include="TextureManager.hpp" />
     <ClInclude Include="StringHelper.hpp" />
     <ClInclude Include="TileMap.hpp" />

@@ -4,20 +4,22 @@
 #include <SFML/Graphics.hpp>
 #include "GameObject.hpp"
 
-class Projectile : public GameObject
+class Projectile 
 {
 public:
-	Projectile(std::vector<sf::Sprite> animations);
+	Projectile(sf::Sprite sprite, float projectileSpeed, sf::Vector2f position);
 	~Projectile();
-	void		animate(sf::Time elapsedTime);
-	void		shoot(sf::Vector2f position, float speed);
+	sf::Sprite& getSpriteRef();
+	void update(sf::Time elapsedTime);
+	void setSprite(sf::Sprite sprite);
 
 private:
-	std::vector<sf::Sprite> mAnimationSprites;
-	float mSpeed;
-	size_t mAnimationCount;
-	
+	sf::Sprite mProjectileSprite;
+	float mProjectileSpeed;
+	sf::Vector2f posi;
 };
+
+
 
 
 #endif // PROJECTILE_HPP

@@ -111,22 +111,7 @@ bool TextureManager::LoadTextures()
 	this->mTileSpirtes["Projectile3"] = sprite;
 
 
-	////----------------------------------
 
-	//subRect.left = 0;
-	//subRect.top = 64;
-	//sprite.setTextureRect(subRect);
-	//this->mTileSpirtes["Projectile1"] = sprite;
-
-	//subRect.left = 16;
-	//subRect.top = 64;
-	//sprite.setTextureRect(subRect);
-	//this->mTileSpirtes["Projectile2"] = sprite;
-
-	//subRect.left = 32;
-	//subRect.top = 64;
-	//sprite.setTextureRect(subRect);
-	//this->mTileSpirtes["Projectile3"] = sprite;
 
 
 	return true;

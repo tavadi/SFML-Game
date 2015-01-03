@@ -6,24 +6,11 @@ Player::Player(TextureManager& texturemanager)
 	, anim(texturemanager)
 {
 	anim.loadAnimations(mAnimationSpritesUp, "PlayerUp", 3);
-	//anim.loadAnimations(mAnimationSpritesRight, "PlayerRight", 3);
-	//anim.loadAnimations(mAnimationSpritesDown, "PlayerDown", 3);
-	anim.loadAnimations(mProjectilesSprites, "Projectile", 3);
-	mCurrentProjectile = new Projectile(mProjectilesSprites);
+	anim.loadAnimations(mAnimationSpritesProjectile, "Projectile", 3);
 	this->mGameObjectSprite = &mAnimationSpritesUp[0];
 }
 
-void Player::loadAnimations(std::vector<sf::Sprite>& animVec, const std::string& animName, const size_t numberofSprites)
-{
-	for (size_t i = 1; i < numberofSprites + 1; ++i)
-	{
-		std::string tempString = animName + std::to_string(i);
-		sf::Sprite tempSprite = mTexutureManager.getSpriteRef(tempString);
-		tempSprite.setScale(3.0f, 3.0f);
-		animVec.push_back(tempSprite);
-	}
 
-}
 
 Player::~Player()
 {
@@ -31,27 +18,17 @@ Player::~Player()
 }
 
 
-void Player::shoot(sf::Time timeSinceLastUpdate, Projectile projectile)
-{
-		projectile.shoot(this->getPosition(), 10.0f);
-		mProjectiles.push_back(projectile);
-		std::cout << "Shooting" << std::endl;
-}
 
-//TODO: FIX: figur bewegt sich nicht weil die jeweiligen sprites ihre eigene position haben
 
 void Player::update(sf::Time timeSinceLastUpdate,PlayerStats stats)
 {
-	for (std::vector<int>::size_type i = 0; i != mProjectiles.size(); i++)
-	{
-		mProjectiles[i].animate(timeSinceLastUpdate);
-	}
+	
 	mElapsedTime += timeSinceLastUpdate;
 	static int UpSideAnimCounter = 1;
 	
 	//Movement
 	if (stats.isAlive == true && 
-		(stats.mIsMovingDown == true ||
+	   (stats.mIsMovingDown == true ||
 		stats.mIsMovingLeft == true ||
 		stats.mIsMovingUp == true ||
 		stats.mIsMovingRight == true))
@@ -77,12 +54,33 @@ void Player::update(sf::Time timeSinceLastUpdate,PlayerStats stats)
 	shootElapsedTime += timeSinceLastUpdate;
 	if (stats.isShooting == true && shootElapsedTime >= sf::seconds(0.5f))
 	{
-		this->shoot(timeSinceLastUpdate, *mCurrentProjectile);
+		this->shoot(timeSinceLastUpdate);
 		shootElapsedTime -= shootElapsedTime;
+		sf::Vector2f pos(this->getPosition());
+		Projectile p(mTexutureManager.getSpriteRef("Projectile1"), 10.0f, pos);
+		mProjectiles.push_back(p);
+	}
+
+
+
+
+	for (std::vector<int>::size_type i = 0; i != mProjectiles.size(); ++i)
+	{
+		mProjectiles[i].update(timeSinceLastUpdate);
 	}
 
 }
 
 
+void Player::shoot(sf::Time elapsedTime)
+{
+	//Projectile p(mAnimationSpritesProjectile, 10.0f,this->getPosition());
+	
+
+}
 
 
+std::vector<Projectile> Player::getProjectiles()
+{
+	return this->mProjectiles;
+}
