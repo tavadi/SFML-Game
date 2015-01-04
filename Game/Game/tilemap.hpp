@@ -16,6 +16,7 @@ public:
 	void updateTileMap(float camPosY);
 	std::vector<std::vector<Tile>>& getCollisionSprites();
 	std::vector<std::vector<Tile>>& getSpritesToDraw();
+	void updateTile(size_t i, size_t j, const std::string tileType);
 
 private:
 	void populateArr(int* level);

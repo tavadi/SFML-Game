@@ -7,6 +7,8 @@ Projectile::Projectile(sf::Sprite sprite, float projectileSpeed, sf::Vector2f po
 	: mProjectileSpeed(projectileSpeed)
 	, posi(position)
 {
+
+	sprite.setScale(2.0f,2.0f);
 	sprite.setPosition(position);
 	this->setSprite(sprite);
 
@@ -26,10 +28,12 @@ void Projectile::update(sf::Time elapsedTime)
 {
 	static sf::Time timePassed;
 	timePassed += elapsedTime;
+	sf::Vector2f movement(0, mProjectileSpeed);
+	
+	mProjectileSprite.move(movement * elapsedTime.asSeconds());
 	if (timePassed >= sf::seconds(1.0f))
 	{
-		std::cout << "ASD" << std::endl;
-		mProjectileSprite.setPosition(posi.x,mProjectileSprite.getPosition().y + 10);
+		
 		timePassed -= sf::seconds(1.0f);
 	}
 

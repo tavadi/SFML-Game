@@ -3,7 +3,7 @@
 #include <iostream>
 
 const float Game::PlayerSpeed = 300.0f;
-const float Game::CameraSpeed = -0.0f;
+const float Game::CameraSpeed = -5;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
@@ -114,7 +114,7 @@ void Game::update(sf::Time elapsedTime)
 		sf::Sprite testSprite(mPlayer1.getSpriteRef());
 		movement.y -= PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
-		if (collisionDetection(testSprite) == false)
+		if (playerCollisionDetection(testSprite) == false)
 		{
 			realMovement.y -= PlayerSpeed;
 		}
@@ -125,18 +125,17 @@ void Game::update(sf::Time elapsedTime)
 		sf::Sprite testSprite(mPlayer1.getSpriteRef());
 		movement.y += PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
-		if (collisionDetection(testSprite) == false)
+		if (playerCollisionDetection(testSprite) == false)
 		{
 			realMovement.y += PlayerSpeed;
 		}
 	}
-
 	if (mPlayerStats.mIsMovingLeft){
 		sf::Vector2f movement(0.f, 0.f);
 		sf::Sprite testSprite(mPlayer1.getSpriteRef());
 		movement.x -= PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
-		if (collisionDetection(testSprite) == false)
+		if (playerCollisionDetection(testSprite) == false)
 		{
 			realMovement.x -= PlayerSpeed;
 		}
@@ -147,11 +146,22 @@ void Game::update(sf::Time elapsedTime)
 		sf::Sprite testSprite(mPlayer1.getSpriteRef());
 		movement.x += PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
-		if (collisionDetection(testSprite) == false)
+		if (playerCollisionDetection(testSprite) == false)
 		{
 			realMovement.x += PlayerSpeed;
 		}
 	}
+
+	std::vector<Projectile> projectiles = mPlayer1.getProjectiles();
+	if (projectiles.size() != 0)
+	{
+		for (std::vector<int>::size_type i = 0; i != projectiles.size(); ++i)
+		{
+			ProjectileCollisionDetection(projectiles[i].getSpriteRef());
+		}
+	}
+
+
 	mPlayer1.move(realMovement * elapsedTime.asSeconds());
 	mPlayer1.update(elapsedTime, mPlayerStats);
 	mWorldView.move(0.0f, CameraSpeed);
@@ -161,8 +171,34 @@ void Game::update(sf::Time elapsedTime)
 }
 
 
+bool Game::ProjectileCollisionDetection(sf::Sprite testSprite)
+{
+	sf::Sprite inSprite = testSprite;
+	mCollisionSprites = mTileMap.getCollisionSprites();
+	for (std::vector<int>::size_type i = 0; i != mCollisionSprites.size(); i++)
+	{
+		for (std::vector<int>::size_type j = 0; j != mCollisionSprites[i].size(); j++)
+		{
+			bool test = Collision::PixelPerfectTest(inSprite, mCollisionSprites[i][j].getSpriteRef());
+			if (test == true)
+			{
+				if (mCollisionSprites[i][j].getTileType() == "Wall")
+				{
+					mTileMap.updateTile(i, j, "Ice");
+					return true;
+				}
+				
+			}
+		}
 
-bool Game::collisionDetection(sf::Sprite testSprite)
+
+	}
+	return false;
+
+}
+
+
+bool Game::playerCollisionDetection(sf::Sprite testSprite)
 {
 	sf::Sprite inSprite = testSprite;
 	mCollisionSprites = mTileMap.getCollisionSprites();
@@ -176,11 +212,12 @@ bool Game::collisionDetection(sf::Sprite testSprite)
 
 				if (mCollisionSprites[i][j].getTileType() == "Wall")
 				{
-					mPlayer1.getSpriteRef().setColor(sf::Color(255, 0, 0, 255));
+					//mPlayer1.getSpriteRef().setColor(sf::Color(255, 0, 0, 255));
 
 					//sf::Vector2f pushDir = (mPlayer.getPosition() - mCollisionSprites[i][j].getSpriteRef().getPosition());
 
 					//mPlayer.move(pushDir);
+
 				}
 				return true;
 			}
@@ -203,14 +240,25 @@ void Game::render()
 	mWindow.setView(mWorldView);
 
 
-	std::vector<std::vector<Tile>> tileMap = mTileMap.getSpritesToDraw();
-	for (std::vector<int>::size_type i = 0; i != tileMap.size(); ++i)
+	std::vector<std::vector<Tile>> tileMap1 = mTileMap.getSpritesToDraw();
+	for (std::vector<int>::size_type i = 0; i != tileMap1.size(); ++i)
 	{
-		for (std::vector<int>::size_type j = 0; j != tileMap[i].size(); ++j)
+		for (std::vector<int>::size_type j = 0; j != tileMap1[i].size(); ++j)
 		{
-			mWindow.draw(tileMap[i][j].getSpriteRef());
+			mWindow.draw(tileMap1[i][j].getSpriteRef());
 		}
 	}
+
+	std::vector<std::vector<Tile>> tileMap2 = mTileMap.getCollisionSprites();
+	for (std::vector<int>::size_type i = 0; i != tileMap2.size(); ++i)
+	{
+		for (std::vector<int>::size_type j = 0; j != tileMap2[i].size(); ++j)
+		{
+			mWindow.draw(tileMap2[i][j].getSpriteRef());
+		}
+	}
+
+
 	std::vector<Projectile> projectiles = mPlayer1.getProjectiles();
 	if (projectiles.size() != 0)
 	{

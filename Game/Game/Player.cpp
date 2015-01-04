@@ -19,7 +19,6 @@ Player::~Player()
 
 
 
-
 void Player::update(sf::Time timeSinceLastUpdate,PlayerStats stats)
 {
 	
@@ -57,11 +56,9 @@ void Player::update(sf::Time timeSinceLastUpdate,PlayerStats stats)
 		this->shoot(timeSinceLastUpdate);
 		shootElapsedTime -= shootElapsedTime;
 		sf::Vector2f pos(this->getPosition());
-		Projectile p(mTexutureManager.getSpriteRef("Projectile1"), 10.0f, pos);
+		Projectile p(mTexutureManager.getSpriteRef("Projectile1"), -800.0f, pos);
 		mProjectiles.push_back(p);
 	}
-
-
 
 
 	for (std::vector<int>::size_type i = 0; i != mProjectiles.size(); ++i)

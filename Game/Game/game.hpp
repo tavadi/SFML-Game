@@ -21,7 +21,9 @@ private:
 	void					render();
 	void					updateStatistics(sf::Time elapsedTime);
 	void					handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
-	bool					collisionDetection(sf::Sprite testSprite);
+	bool					playerCollisionDetection(sf::Sprite testSprite);
+	bool					ProjectileCollisionDetection(sf::Sprite testSprite);
+	
 
 private:
 	static const float		PlayerSpeed;

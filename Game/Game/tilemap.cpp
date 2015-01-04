@@ -82,19 +82,21 @@ void TileMap::createLevel(std::vector<Tile>& Collisionmap, std::vector<Tile>& dr
 		for (unsigned int j = 0; j < mMapWidth; ++j)
 		{
 			Tile tempSprite;
-			switch (level[drawMap.size()])
+			switch (level[drawMap.size() + Collisionmap.size()])
 			{
 			case 0:
 				tempSprite.setSprite(mTextureManager.getSpriteRef("Ice1"));
 				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
 				tempSprite.setTileType("Ice");
 				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
+				drawMap.push_back(tempSprite);
 				break;
 			case 1:
 				tempSprite.setSprite(mTextureManager.getSpriteRef("Ice2"));
 				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
 				tempSprite.setTileType("Ice");
 				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
+				drawMap.push_back(tempSprite);
 				break;
 			case 2:
 				tempSprite.setSprite(mTextureManager.getSpriteRef("Wall1"));
@@ -118,11 +120,8 @@ void TileMap::createLevel(std::vector<Tile>& Collisionmap, std::vector<Tile>& dr
 				tempSprite.setTileType("Wall");
 				Collisionmap.push_back(tempSprite);
 				break;
-
-			default:
-				break;
 			}
-			drawMap.push_back(tempSprite);
+			
 			mTexturePosX += mTexuteSize;
 		}
 		mTexturePosX = 0;
@@ -130,12 +129,19 @@ void TileMap::createLevel(std::vector<Tile>& Collisionmap, std::vector<Tile>& dr
 	}
 }
 
+void TileMap::updateTile(size_t i, size_t j, const std::string tileType)
+{
+	mCollisionsToHandle[i][j].setTileType(tileType);
+	mCollisionsToHandle[i][j].setSprite(mTextureManager.getSpriteRef("Ice1"));
+}
 
 
+//Problem: es werden immer zwei maps eingefügt, eine neue und eine alte, die alte ist nicht die geupdatete demnach erscheinen
+//zerstörte tiles wieder
 void TileMap::updateTileMap(float camPosY)
 {
 
-	if (fmod(camPosY,800) == 0 && camPosY != 0)
+	if (fmod(camPosY, 800) == 0 && camPosY != 0)
 	{
 		std::cout << camPosY << std::endl;
 		if (mMapCounter == 3)
