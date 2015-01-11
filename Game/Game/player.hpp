@@ -13,7 +13,8 @@ public:
 	sf::Sprite getSpriteToDraw() const;
 	void update(sf::Time timeSinceLastUpdate, PlayerStats stats);
 	void shoot(sf::Time timeSinceLastUpdate);
-	std::vector<Projectile> getProjectiles();
+	std::vector<Projectile>& getProjectiles();
+	void removeProjectile(float i);
 private:
 	PlayerStats* playerStats;
 	int mPlayerHealth;
@@ -24,7 +25,9 @@ private:
 	std::vector<sf::Sprite> mAnimationSpritesProjectile;
 	std::vector<Projectile> mProjectiles;
 	size_t mCurrentAnimSprite;
-	
+	sf::Time shootRate;
+	sf::Time shootLength;
+	sf::Time shootElapsedTime;
 	
 
 

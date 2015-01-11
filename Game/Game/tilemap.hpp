@@ -41,10 +41,16 @@ private:
 	float mTexturePosY;
 	int mTileMapCount;
 	float mCamPos;
-	int noCollisionCount;
+
+	//for populateArr function/rand
+	
 	int* mLevel0;
+	size_t mNoCollisionCount;
 	int* mLevel1;
 	int* mLevel2; 
+
+	//INFO how many tiles there are that are not needed to check for collision detection
+	
 	TextureManager mTextureManager;
 };
 

@@ -27,16 +27,16 @@ sf::Sprite& Projectile::getSpriteRef()
 void Projectile::update(sf::Time elapsedTime)
 {
 	static sf::Time timePassed;
-	timePassed += elapsedTime;
-	sf::Vector2f movement(0, mProjectileSpeed);
-	
-	mProjectileSprite.move(movement * elapsedTime.asSeconds());
-	if (timePassed >= sf::seconds(1.0f))
-	{
-		
-		timePassed -= sf::seconds(1.0f);
-	}
+	static sf::Time aliveTime;
+		timePassed += elapsedTime;
+		aliveTime += elapsedTime;
+		sf::Vector2f movement(0, mProjectileSpeed);
+		mProjectileSprite.move(movement * elapsedTime.asSeconds());
+		if (timePassed >= sf::seconds(1.0f))
+		{
 
+			timePassed -= sf::seconds(1.0f);
+		}
 }
 
 

@@ -3,7 +3,7 @@
 #include <iostream>
 
 const float Game::PlayerSpeed = 300.0f;
-const float Game::CameraSpeed = -5;
+const float Game::CameraSpeed = -4;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
@@ -157,7 +157,10 @@ void Game::update(sf::Time elapsedTime)
 	{
 		for (std::vector<int>::size_type i = 0; i != projectiles.size(); ++i)
 		{
-			ProjectileCollisionDetection(projectiles[i].getSpriteRef());
+			if (ProjectileCollisionDetection(projectiles[i].getSpriteRef()) == true)
+			{
+				mPlayer1.removeProjectile(i);
+			}
 		}
 	}
 
@@ -184,6 +187,7 @@ bool Game::ProjectileCollisionDetection(sf::Sprite testSprite)
 			{
 				if (mCollisionSprites[i][j].getTileType() == "Wall")
 				{
+					//std::cout << i << std::endl;
 					mTileMap.updateTile(i, j, "Ice");
 					return true;
 				}
@@ -219,7 +223,7 @@ bool Game::playerCollisionDetection(sf::Sprite testSprite)
 					//mPlayer.move(pushDir);
 
 				}
-				return true;
+ 				return true;
 			}
 			else
 			{
