@@ -2,8 +2,9 @@
 #include "StringHelper.hpp"
 #include <iostream>
 
-const float Game::PlayerSpeed = 300.0f;
-const float Game::CameraSpeed = -4;
+float Game::PlayerSpeed = 300.0f;
+float Game::speedPowerUp = 40.0f;
+float Game::CameraSpeed = -4.0f;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
 /*
@@ -13,7 +14,7 @@ unverwundbar
 heal
 timeslow
 speed debuff, sollte man nicht einsammeln
-t�uschung wie in darksouls , mimic kiste
+taeuschung wie in darksouls , mimic kiste
 */
 
 
@@ -45,6 +46,12 @@ Game::Game()
 	mStatisticsText.setCharacterSize(20);
 	mStatisticsText.setColor(sf::Color(0, 255, 255));
 	mWorldView.setCenter(mWorldView.getCenter().x, 0.0f);
+
+	if (!mBackgroundMusic.openFromFile("backgroundmusic.wav"))
+	{
+		std::cout << "error while loading backgroundmusic" << std::endl;
+	}
+	mBackgroundMusic.play();
 }
 
 
@@ -105,7 +112,24 @@ void Game::processEvents()
 //Pass time to calculate frame independent movement speed
 void Game::update(sf::Time elapsedTime)
 {
-	mTileMap.updateTileMap(mWorldView.getCenter().y);
+
+	float posDiffernce = mWorldView.getCenter().y - mPlayer1.getSpriteRef().getPosition().y;
+	if (mPlayer1.getHealth() <= 0 || posDiffernce <= -400.0f)
+	{
+		mPlayerStats.isAlive = false;
+		std::cout << "PLAYER IS DEAD" << std::endl;
+
+	}
+	
+	if (mTileMap.updateTileMap(mWorldView.getCenter().y, CameraSpeed) == true)
+	{
+		CameraSpeed -= 0.5f;
+		/*std::cout << "PLAYER" << mPlayer1.getSpriteRef().getPosition().y << std::endl;
+		std::cout << "WORLD" << mWorldView.getCenter().y << std::endl;*/
+		//std::cout << posDiffernce << std::endl;
+		
+	}
+
 	sf::Vector2f realMovement(0.f, 0.f);
 	//Handle movement
 	
@@ -114,7 +138,7 @@ void Game::update(sf::Time elapsedTime)
 		sf::Sprite testSprite(mPlayer1.getSpriteRef());
 		movement.y -= PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
-		if (playerCollisionDetection(testSprite) == false)
+		if (playerCollisionDetection(testSprite, elapsedTime) == false)
 		{
 			realMovement.y -= PlayerSpeed;
 		}
@@ -125,7 +149,7 @@ void Game::update(sf::Time elapsedTime)
 		sf::Sprite testSprite(mPlayer1.getSpriteRef());
 		movement.y += PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
-		if (playerCollisionDetection(testSprite) == false)
+		if (playerCollisionDetection(testSprite,elapsedTime) == false)
 		{
 			realMovement.y += PlayerSpeed;
 		}
@@ -135,7 +159,7 @@ void Game::update(sf::Time elapsedTime)
 		sf::Sprite testSprite(mPlayer1.getSpriteRef());
 		movement.x -= PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
-		if (playerCollisionDetection(testSprite) == false)
+		if (playerCollisionDetection(testSprite,elapsedTime) == false)
 		{
 			realMovement.x -= PlayerSpeed;
 		}
@@ -146,7 +170,7 @@ void Game::update(sf::Time elapsedTime)
 		sf::Sprite testSprite(mPlayer1.getSpriteRef());
 		movement.x += PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
-		if (playerCollisionDetection(testSprite) == false)
+		if (playerCollisionDetection(testSprite, elapsedTime) == false)
 		{
 			realMovement.x += PlayerSpeed;
 		}
@@ -163,14 +187,10 @@ void Game::update(sf::Time elapsedTime)
 			}
 		}
 	}
-
-
 	mPlayer1.move(realMovement * elapsedTime.asSeconds());
 	mPlayer1.update(elapsedTime, mPlayerStats);
 	mWorldView.move(0.0f, CameraSpeed);
 	mStatisticsText.move(0.0f, CameraSpeed);
-
-
 }
 
 
@@ -202,8 +222,10 @@ bool Game::ProjectileCollisionDetection(sf::Sprite testSprite)
 }
 
 
-bool Game::playerCollisionDetection(sf::Sprite testSprite)
+bool Game::playerCollisionDetection(sf::Sprite testSprite, sf::Time elapsedTime)
 {
+	static sf::Time lastTimeHitted;
+	lastTimeHitted += elapsedTime;
 	sf::Sprite inSprite = testSprite;
 	mCollisionSprites = mTileMap.getCollisionSprites();
 	for (std::vector<int>::size_type i = 0; i != mCollisionSprites.size(); i++)
@@ -217,11 +239,25 @@ bool Game::playerCollisionDetection(sf::Sprite testSprite)
 				if (mCollisionSprites[i][j].getTileType() == "Wall")
 				{
 					//mPlayer1.getSpriteRef().setColor(sf::Color(255, 0, 0, 255));
-
 					//sf::Vector2f pushDir = (mPlayer.getPosition() - mCollisionSprites[i][j].getSpriteRef().getPosition());
-
 					//mPlayer.move(pushDir);
-
+					if (lastTimeHitted >= sf::seconds(2.0f))
+					{
+						mPlayer1.removeHealth(10);
+						lastTimeHitted -= lastTimeHitted;
+						std::cout << "Player took damage, health left : " << mPlayer1.getHealth() << std::endl;
+					}
+					
+				}
+				else if (mCollisionSprites[i][j].getTileType() == "SpeedPowerUp")
+				{
+					mTileMap.updateTile(i, j, "Ice");
+					PlayerSpeed += speedPowerUp;
+				}
+				else if (mCollisionSprites[i][j].getTileType() == "ShieldPowerUp")
+				{
+					mTileMap.updateTile(i, j, "Ice");
+					mPlayer1.addHealth(10);
 				}
  				return true;
 			}

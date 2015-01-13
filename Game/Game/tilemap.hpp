@@ -13,7 +13,7 @@ public:
 	TileMap(sf::Vector2u size, TextureManager& txtmanager);
 	~TileMap();
 	void createLevel(std::vector<Tile>& collisionMap, std::vector<Tile>& drawMap, int *level);
-	void updateTileMap(float camPosY);
+	bool updateTileMap(float camPosY, float cameraSpeed);
 	std::vector<std::vector<Tile>>& getCollisionSprites();
 	std::vector<std::vector<Tile>>& getSpritesToDraw();
 	void updateTile(size_t i, size_t j, const std::string tileType);

@@ -4,6 +4,7 @@ const float Player::PlayerSpeed = 600.0f;
 Player::Player(TextureManager& texturemanager)
 	:mTexutureManager(texturemanager)
 	, anim(texturemanager)
+	, mPlayerHealth(50)
 {
 	anim.loadAnimations(mAnimationSpritesUp, "PlayerUp", 3);
 	anim.loadAnimations(mAnimationSpritesProjectile, "Projectile", 3);
@@ -97,4 +98,21 @@ void Player::removeProjectile(float i)
 {
 	mProjectiles.erase(mProjectiles.begin() + i);
 
+}
+
+
+void Player::removeHealth(int damage)
+{
+	mPlayerHealth -= damage;
+}
+
+
+void Player::addHealth(int health)
+{
+	mPlayerHealth += health;
+}
+
+int Player::getHealth()
+{
+	return mPlayerHealth;
 }

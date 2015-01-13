@@ -45,7 +45,15 @@ bool TextureManager::LoadTextures()
 	sprite.setTextureRect(subRect);
 	this->mTileSpirtes["Ice2"] = sprite;
 
+	subRect.left = 0;
+	subRect.top = 64;
+	sprite.setTextureRect(subRect);
+	this->mTileSpirtes["SpeedPowerUp"] = sprite;
 
+	subRect.left = 16;
+	subRect.top = 64;
+	sprite.setTextureRect(subRect);
+	this->mTileSpirtes["ShieldPowerUp"] = sprite;
 
 	subRect.left = 16;
 	subRect.top = 0;

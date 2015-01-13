@@ -4,7 +4,7 @@
 TileMap::TileMap(sf::Vector2u size, TextureManager& texturemanager)
 	:mWindowSize(size)
 	, mMapHeight(10)
-	, mMapWidth(8)
+	, mMapWidth(10)
 	, mTexturePosX(0)
 	, mTexturePosY(-400)
 	, mTexuteSize(80)
@@ -52,7 +52,7 @@ void TileMap::populateArr(int* level)
 		}
 		else
 		{
-			int randN = rand() % 8 + 5;
+			int randN = rand() % 8 + 6;
 			if (noCollisionCount < randN)
 			{
 				int randN = rand() % 2;
@@ -71,6 +71,9 @@ void TileMap::populateArr(int* level)
 			//std::cout << std::endl;
 		}
 	}
+	level[15] = 5;
+
+	level[mTileMapCount- 5] = 6;
 	//std::cout << std::endl;
 }
 
@@ -124,6 +127,20 @@ void TileMap::createLevel(std::vector<Tile>& Collisionmap, std::vector<Tile>& dr
 				tempSprite.setTileType("Wall");
 				Collisionmap.push_back(tempSprite);
 				break;
+			case 5:
+				tempSprite.setSprite(mTextureManager.getSpriteRef("SpeedPowerUp"));
+				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
+				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
+				tempSprite.setTileType("SpeedPowerUp");
+				Collisionmap.push_back(tempSprite);
+				break;
+			case 6:
+				tempSprite.setSprite(mTextureManager.getSpriteRef("ShieldPowerUp"));
+				tempSprite.getSpriteRef().setScale(5.0f, 5.0f);
+				tempSprite.getSpriteRef().setPosition(mTexturePosX, mTexturePosY);
+				tempSprite.setTileType("ShieldPowerUp");
+				Collisionmap.push_back(tempSprite);
+				break;
 			}
 			mTexturePosX += mTexuteSize;
 		}
@@ -135,14 +152,6 @@ void TileMap::createLevel(std::vector<Tile>& Collisionmap, std::vector<Tile>& dr
 
 void TileMap::updateTile(size_t i, size_t j, const std::string tileType)
 {
-
-
-	//mSpritesToDraw[i][]
-	//sf::Sprite tempSprite();
-	
-	
-
-
 	mCollisionsToHandle[i][j].setTileType(tileType);
 	mCollisionsToHandle[i][j].setSprite(mTextureManager.getSpriteRef("Ice1"));
 	
@@ -192,11 +201,17 @@ void TileMap::updateTile(size_t i, size_t j, const std::string tileType)
 
 //Problem: es werden immer zwei maps eingefügt, eine neue und eine alte, die alte ist nicht die geupdatete demnach erscheinen
 //zerstörte tiles wieder
-void TileMap::updateTileMap(float camPosY)
+bool TileMap::updateTileMap(float camPosY, float cameraSpeed)
 {
 	//std::cout << "CUrrent MAP: " << mMapCounter << std::endl;
 	static bool hasStarted = false;
-	if (fmod(camPosY, 800) == 0 && camPosY != 0)
+	static float camPosition = 0;
+
+
+	camPosition += cameraSpeed;
+	//std::cout << camPosition << std::endl;
+	//if (fmod(camPosY, 800) == 0 && camPosY != 0)
+	if (camPosition <= -790)
 	{
 		//std::cout << camPosY << std::endl;
 		if (mMapCounter == 3)
@@ -209,7 +224,6 @@ void TileMap::updateTileMap(float camPosY)
 			//note inefficent Because vectors use an array as their underlying storage,
 			//erasing elements in positions other than the vector end causes the container 
 			//to relocate all the elements after the segment erased to their new positions. 
-
 			//TODO : write efficently!
 		case 0:
 			this->populateArr(mLevel1);
@@ -220,7 +234,6 @@ void TileMap::updateTileMap(float camPosY)
 				mCollisionsToHandle.push_back(mCollisionSprites1);
 				mSpritesToDraw.erase(mSpritesToDraw.begin());
 				mSpritesToDraw.push_back(mSpritesMap1);
-
 			}
 			else
 			{
@@ -228,7 +241,6 @@ void TileMap::updateTileMap(float camPosY)
 				mSpritesToDraw.push_back(mSpritesMap1);
 				hasStarted = true;
 			}
-	
 			break;
 		case 1:
 			this->populateArr(mLevel2);
@@ -247,9 +259,11 @@ void TileMap::updateTileMap(float camPosY)
 			mSpritesToDraw.push_back(mSpritesMap0);
 			break;
 		}
+		camPosition = 0;
 		++mMapCounter;
+		return true;
 	}
-
+	return false;
 }
 
 

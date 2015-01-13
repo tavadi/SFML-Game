@@ -1,11 +1,13 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include "TextureManager.hpp"
 #include "TileMap.hpp"
 #include "Collision.h"
 #include "player.hpp"
+
 
 
 class Game : private sf::NonCopyable
@@ -21,13 +23,14 @@ private:
 	void					render();
 	void					updateStatistics(sf::Time elapsedTime);
 	void					handlePlayerInput(sf::Keyboard::Key key, bool isPressed);
-	bool					playerCollisionDetection(sf::Sprite testSprite);
+	bool					playerCollisionDetection(sf::Sprite testSpritesf,sf::Time elapsedTime);
 	bool					ProjectileCollisionDetection(sf::Sprite testSprite);
 	
 
 private:
-	static const float		PlayerSpeed;
-	static const float		CameraSpeed;
+	static float		PlayerSpeed;
+	static float		speedPowerUp;
+	static float		CameraSpeed;
 	static const sf::Time	TimePerFrame;
 	float					mScrollingSpeed;
 
@@ -39,8 +42,7 @@ private:
 	sf::Time				mStatisticsUpdateTime;
 	sf::View				mWorldView;
 
-
-
+	sf::Music				mBackgroundMusic;
 
 	std::size_t				mStatisticsNumFrames;
 

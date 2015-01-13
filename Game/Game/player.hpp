@@ -4,6 +4,7 @@
 #include "GameObject.hpp"
 #include "Projectile.hpp"
 
+
 class Player : public GameObject
 {
 public:
@@ -15,6 +16,9 @@ public:
 	void shoot(sf::Time timeSinceLastUpdate);
 	std::vector<Projectile>& getProjectiles();
 	void removeProjectile(float i);
+	void removeHealth(int damage);
+	int getHealth();
+	void addHealth(int health);
 private:
 	PlayerStats* playerStats;
 	int mPlayerHealth;
@@ -28,7 +32,6 @@ private:
 	sf::Time shootRate;
 	sf::Time shootLength;
 	sf::Time shootElapsedTime;
-	
 
 
 };
