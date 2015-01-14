@@ -1,12 +1,15 @@
-﻿Build started 12.01.2015 23:29:04.
+﻿Build started 14.01.2015 20:14:47.
      1>Project "C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Game\Game.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\beni\Source\Repos\SFML-Game\Game\SFML\include" /I"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\SFML\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt game.cpp main.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"C:\Users\beni\Source\Repos\SFML-Game\Game\SFML\include" /I"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\SFML\include" /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Player.cpp TileMap.cpp game.cpp main.cpp
+         Player.cpp
+     1>Player.cpp(106): warning C4244: 'argument' : conversion from 'float' to '__w64 int', possible loss of data
+         TileMap.cpp
          game.cpp
-     1>game.cpp(182): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
+     1>game.cpp(210): warning C4244: 'argument' : conversion from 'unsigned int' to 'float', possible loss of data
          main.cpp
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Release\Game.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\beni\Documents\GitHub\SFML-Game\Game\SFML\lib\Release" /LIBPATH:"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\SFML\lib\Release" "sfml-graphics.lib" "sfml-window.lib" "sfml-system.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Release\Game.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Release\Game.lib" /MACHINE:X86 /SAFESEH Release\AnimationManager.obj
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Release\Game.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:\Users\beni\Documents\GitHub\SFML-Game\Game\SFML\lib\Release" /LIBPATH:"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\SFML\lib\Release" "sfml-graphics.lib" "sfml-audio.lib" "sfml-window.lib" "sfml-system.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Release\Game.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Release\Game.lib" /MACHINE:X86 /SAFESEH Release\AnimationManager.obj
          Release\Collision.obj
          Release\game.obj
          Release\GameObject.obj
@@ -16,11 +19,11 @@
          Release\TextureManager.obj
          Release\TileMap.obj
          Release\Tile.obj
-     1>game.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: __thiscall sf::SoundBuffer::~SoundBuffer(void)" (__imp_??1SoundBuffer@sf@@QAE@XZ)
-     1>game.obj : error LNK2001: unresolved external symbol "__declspec(dllimport) public: __thiscall sf::SoundBuffer::SoundBuffer(void)" (__imp_??0SoundBuffer@sf@@QAE@XZ)
-     1>C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Release\Game.exe : fatal error LNK1120: 2 unresolved externals
-     1>Done Building Project "C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Game\Game.vcxproj" (Build target(s)) -- FAILED.
+         Generating code
+         Finished generating code
+         Game.vcxproj -> C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Release\Game.exe
+     1>Done Building Project "C:\Users\Benjamin\Documents\GitHub\SFML-Game\Game\Game\Game.vcxproj" (Build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:02.14
+Time Elapsed 00:00:03.59

@@ -4,7 +4,9 @@
 int main()
 {
 	std::cout << "1 : Game Starting" << std::endl;
-	
+
 	Game game;
 	game.run();
+
+
 }

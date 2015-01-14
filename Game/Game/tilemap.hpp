@@ -41,7 +41,8 @@ private:
 	float mTexturePosY;
 	int mTileMapCount;
 	float mCamPos;
-
+	bool mHasStarted;
+	float mCamPosition;
 	//for populateArr function/rand
 	
 	int* mLevel0;

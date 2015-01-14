@@ -4,7 +4,7 @@
 TileMap::TileMap(sf::Vector2u size, TextureManager& texturemanager)
 	:mWindowSize(size)
 	, mMapHeight(10)
-	, mMapWidth(10)
+	, mMapWidth(8)
 	, mTexturePosX(0)
 	, mTexturePosY(-400)
 	, mTexuteSize(80)
@@ -15,6 +15,8 @@ TileMap::TileMap(sf::Vector2u size, TextureManager& texturemanager)
 	, mMapCounter(0)
 	, mTextureManager(texturemanager)
 	, mNoCollisionCount(0)
+	, mHasStarted(false)
+	, mCamPos(0)
 {
 	//std::cout << "2 : TileMap Created" << std::endl;
 	this->populateArr(mLevel0);
@@ -26,9 +28,9 @@ TileMap::TileMap(sf::Vector2u size, TextureManager& texturemanager)
 
 TileMap::~TileMap()
 {
-	delete[] mLevel0;
-	delete[] mLevel1;
-	delete[] mLevel2;
+	//delete[] mLevel0;
+	//delete[] mLevel1;
+	//delete[] mLevel2;
 }
 
 
@@ -52,7 +54,8 @@ void TileMap::populateArr(int* level)
 		}
 		else
 		{
-			int randN = rand() % 8 + 6;
+			int rand1 = rand() % 6 + 3;
+			int randN = rand() % 8 + rand1;
 			if (noCollisionCount < randN)
 			{
 				int randN = rand() % 2;
@@ -65,15 +68,34 @@ void TileMap::populateArr(int* level)
 				noCollisionCount = 0;
 			}
 		}
-		//std::cout << level[i];
-		if (i % mMapWidth == 7)
-		{
-			//std::cout << std::endl;
-		}
-	}
-	level[15] = 5;
 
-	level[mTileMapCount- 5] = 6;
+	}
+	int rand1 = rand() % mTileMapCount + 1;
+
+
+	if (rand1 % mMapWidth == 0 || rand1 % mMapWidth == 8)
+	{
+		rand1++;
+		
+	}
+	//std::cout << "POS: " << rand1 << std::cout;
+	//std::cout << "POS : " << rand1 << std::endl;
+	level[rand1] = 5; // SpeedPowerUp
+
+
+
+	 rand1 = rand() % mTileMapCount + 1;
+	if (rand1 % mMapWidth == 0 || rand1 % mMapWidth == 8)
+	{
+		rand1++;
+	}
+	int rand2 = rand() % 2 + 1;
+	if (rand2 == 2)
+	{
+		/*std::cout << "rand2: " << rand2 <<"rand1" << rand1 <<  std::endl;*/
+		level[rand1] = 6; // shield
+	}
+	
 	//std::cout << std::endl;
 }
 
@@ -155,10 +177,10 @@ void TileMap::updateTile(size_t i, size_t j, const std::string tileType)
 	mCollisionsToHandle[i][j].setTileType(tileType);
 	mCollisionsToHandle[i][j].setSprite(mTextureManager.getSpriteRef("Ice1"));
 	
-	if (mMapCounter == 3)
-	{
-		mMapCounter = 0;
-	}
+	//if (mMapCounter == 3)
+	//{
+	//	mMapCounter = 0;
+	//}
 	
 
 	switch (mMapCounter)
@@ -204,14 +226,11 @@ void TileMap::updateTile(size_t i, size_t j, const std::string tileType)
 bool TileMap::updateTileMap(float camPosY, float cameraSpeed)
 {
 	//std::cout << "CUrrent MAP: " << mMapCounter << std::endl;
-	static bool hasStarted = false;
-	static float camPosition = 0;
 
-
-	camPosition += cameraSpeed;
+	mCamPosition += cameraSpeed;
 	//std::cout << camPosition << std::endl;
 	//if (fmod(camPosY, 800) == 0 && camPosY != 0)
-	if (camPosition <= -790)
+	if (mCamPosition <= -790)
 	{
 		//std::cout << camPosY << std::endl;
 		if (mMapCounter == 3)
@@ -228,7 +247,7 @@ bool TileMap::updateTileMap(float camPosY, float cameraSpeed)
 		case 0:
 			this->populateArr(mLevel1);
 			this->createLevel(mCollisionSprites1, mSpritesMap1, mLevel1);
-			if (hasStarted == true)
+			if (mHasStarted == true)
 			{
 				mCollisionsToHandle.erase(mCollisionsToHandle.begin());
 				mCollisionsToHandle.push_back(mCollisionSprites1);
@@ -239,7 +258,7 @@ bool TileMap::updateTileMap(float camPosY, float cameraSpeed)
 			{
 				mCollisionsToHandle.push_back(mCollisionSprites1);
 				mSpritesToDraw.push_back(mSpritesMap1);
-				hasStarted = true;
+				mHasStarted = true;
 			}
 			break;
 		case 1:
@@ -259,7 +278,7 @@ bool TileMap::updateTileMap(float camPosY, float cameraSpeed)
 			mSpritesToDraw.push_back(mSpritesMap0);
 			break;
 		}
-		camPosition = 0;
+		mCamPosition = 0;
 		++mMapCounter;
 		return true;
 	}

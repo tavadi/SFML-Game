@@ -14,6 +14,7 @@ class Game : private sf::NonCopyable
 {
 public:
 	Game();
+	~Game();
 	void					run();
 
 
@@ -31,6 +32,7 @@ private:
 	static float		PlayerSpeed;
 	static float		speedPowerUp;
 	static float		CameraSpeed;
+	static float		CameraMaxSpeed;
 	static const sf::Time	TimePerFrame;
 	float					mScrollingSpeed;
 
@@ -38,17 +40,23 @@ private:
 	sf::Texture				mTexture;
 	sf::Sprite				mPlayer;
 	sf::Font				mFont;
-	sf::Text				mStatisticsText;
+	//sf::Text				mStatisticsText;
 	sf::Time				mStatisticsUpdateTime;
-	sf::View				mWorldView;
-
+	sf::View*				mWorldView;
 	sf::Music				mBackgroundMusic;
-
 	std::size_t				mStatisticsNumFrames;
+	sf::SoundBuffer			mExplosionSound;
+	sf::SoundBuffer			mGotHitSound;
+	sf::SoundBuffer			mPowerUpShieldSound;
+	sf::SoundBuffer			mPowerUpSpeedSound;
+	sf::SoundBuffer			mPlayerDeadSound;
+	sf::SoundBuffer			mShootSound;
+	sf::Sound				mSoundPlayer;
+
 
 	TextureManager			mTextureManager;
-	TileMap					mTileMap;
-	Player					mPlayer1;
+	TileMap*				mTileMap;
+	Player*					mPlayer1;
 	PlayerStats				mPlayerStats;
 
 

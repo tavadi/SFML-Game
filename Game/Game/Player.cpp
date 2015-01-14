@@ -4,14 +4,16 @@ const float Player::PlayerSpeed = 600.0f;
 Player::Player(TextureManager& texturemanager)
 	:mTexutureManager(texturemanager)
 	, anim(texturemanager)
-	, mPlayerHealth(50)
+	, mPlayerHealth(30)
+	, mHealthCounter(3)
 {
 	anim.loadAnimations(mAnimationSpritesUp, "PlayerUp", 3);
 	anim.loadAnimations(mAnimationSpritesProjectile, "Projectile", 3);
 	this->mGameObjectSprite = &mAnimationSpritesUp[0];
 	shootRate += sf::seconds(2.0f);
-	shootLength += sf::seconds(0.3f);
+	shootLength += sf::seconds(0.8f);
 	shootElapsedTime = shootRate;
+	animationRate += sf::seconds(0.20f);
 }
 
 
@@ -25,7 +27,6 @@ Player::~Player()
 
 void Player::update(sf::Time timeSinceLastUpdate,PlayerStats stats)
 {
-	
 	mElapsedTime += timeSinceLastUpdate;
 	static int UpSideAnimCounter = 1;
 	
@@ -43,15 +44,23 @@ void Player::update(sf::Time timeSinceLastUpdate,PlayerStats stats)
 		{
 			UpSideAnimCounter = 1;
 		}
-		if (mElapsedTime >= sf::seconds(0.20f))
+		if (mElapsedTime >= animationRate)
 		{
 			mCurrentAnimSprite += UpSideAnimCounter;
 			this->mGameObjectSprite = &mAnimationSpritesUp[mCurrentAnimSprite];
-			mElapsedTime -= sf::seconds(0.20f);
+			mElapsedTime -= animationRate;
 		}
 	}
+	unsigned int healthLife = mHealthCounter *85;
+	if (healthLife > 255)
+	{
+		healthLife = 255;
+	}
 	mAnimationSpritesUp[mCurrentAnimSprite].setPosition(this->getPosition());
+	mAnimationSpritesUp[mCurrentAnimSprite].setColor(sf::Color(255, healthLife, healthLife, 255));
 
+/*		
+	mPlayer1->getSpriteRef().setColor();*/
 	//Shooting
 	 
 	shootElapsedTime += timeSinceLastUpdate;
@@ -67,9 +76,7 @@ void Player::update(sf::Time timeSinceLastUpdate,PlayerStats stats)
 		shootElapsedTime -= shootElapsedTime;
 		sf::Vector2f pos(this->getPosition());
 		Projectile p(mTexutureManager.getSpriteRef("Projectile1"), -800.0f, pos);
-
 		mProjectiles.push_back(p);
-
 	}
 
 	for (std::vector<int>::size_type i = 0; i != mProjectiles.size(); ++i)
@@ -104,15 +111,32 @@ void Player::removeProjectile(float i)
 void Player::removeHealth(int damage)
 {
 	mPlayerHealth -= damage;
+	mHealthCounter--;
 }
 
 
 void Player::addHealth(int health)
 {
-	mPlayerHealth += health;
+	if (mHealthCounter != 5)
+	{
+		mPlayerHealth += health;
+		mHealthCounter++;
+	}
+
 }
 
 int Player::getHealth()
 {
 	return mPlayerHealth;
+	if (mHealthCounter != 0){ 
+		mHealthCounter--; }
+}
+
+void Player::speedUp()
+{
+	if (animationRate > sf::seconds(0.08f))
+	{
+		animationRate -= sf::seconds(0.02f);
+	}
+	
 }

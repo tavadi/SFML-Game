@@ -7,4 +7,5 @@ struct PlayerStats
 	bool					mIsColliding;
 	bool					isAlive;
 	bool					isShooting;
+	bool					wantsToLeave;
 };

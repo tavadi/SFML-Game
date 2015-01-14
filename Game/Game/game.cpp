@@ -5,17 +5,9 @@
 float Game::PlayerSpeed = 300.0f;
 float Game::speedPowerUp = 40.0f;
 float Game::CameraSpeed = -4.0f;
+float Game::CameraMaxSpeed = -12;
 const sf::Time Game::TimePerFrame = sf::seconds(1.f / 60.f);
 
-/*
----
-Antidmg buff
-unverwundbar
-heal
-timeslow
-speed debuff, sollte man nicht einsammeln
-taeuschung wie in darksouls , mimic kiste
-*/
 
 
 Game::Game()
@@ -23,16 +15,15 @@ Game::Game()
 	, mTexture()
 	, mPlayer()
 	, mFont()
-	, mStatisticsText()
+	//, mStatisticsText()
 	, mStatisticsUpdateTime()
 	, mStatisticsNumFrames(0)
-	, mWorldView(sf::FloatRect(0, 0, 640, 680))
 	, mScrollingSpeed(-480)
-	, mTileMap(mWindow.getSize(), mTextureManager)
-	, mPlayer1(mTextureManager)
 {
-	mPlayer1.getSpriteRef().setPosition(100.f, 100.f);
-	mPlayer1.getSpriteRef().setScale(4, 4);
+	mWorldView = new sf::View(sf::FloatRect(0, 0, 640, 680));
+	mPlayer1 = new Player(mTextureManager);
+	mTileMap = new TileMap(mWindow.getSize(), mTextureManager);
+	mPlayer1->setPosition(250, -200);
 	mPlayerStats.isAlive = true;
 	mPlayerStats.mIsColliding = false;
 	mPlayerStats.mIsMovingDown = false;
@@ -40,13 +31,21 @@ Game::Game()
 	mPlayerStats.mIsMovingLeft = false;
 	mPlayerStats.mIsMovingRight = false;
 	mPlayerStats.isShooting = false;
+	mPlayerStats.wantsToLeave = false;
 	mFont.loadFromFile("Sansation.ttf");
-	mStatisticsText.setFont(mFont);
-	mStatisticsText.setPosition(5.f, 5.f);
-	mStatisticsText.setCharacterSize(20);
-	mStatisticsText.setColor(sf::Color(0, 255, 255));
-	mWorldView.setCenter(mWorldView.getCenter().x, 0.0f);
+	//mStatisticsText.setFont(mFont);
+	//mStatisticsText.setPosition(5.f, 5.f);
+	//mStatisticsText.setCharacterSize(20);
+	//mStatisticsText.setColor(sf::Color(0, 255, 255));
+	mWorldView->setCenter(mWorldView->getCenter().x, 0);
+	mExplosionSound.loadFromFile("explosion.wav");
+	mGotHitSound.loadFromFile("hit.wav");
+	mPowerUpShieldSound.loadFromFile("powerupShield.wav");
+	mPowerUpSpeedSound.loadFromFile("powerupSpeed.wav");
+	mShootSound.loadFromFile("shoot.wav");
+	mPlayerDeadSound.loadFromFile("WilhelmScream.wav");
 
+	mSoundPlayer.setVolume(15.0f);
 	if (!mBackgroundMusic.openFromFile("backgroundmusic.wav"))
 	{
 		std::cout << "error while loading backgroundmusic" << std::endl;
@@ -54,7 +53,12 @@ Game::Game()
 	mBackgroundMusic.play();
 }
 
-
+Game::~Game()
+{
+	delete mPlayer1;
+	delete mTileMap;
+	delete mWorldView;
+}
 
 
 
@@ -64,7 +68,7 @@ void Game::run()
 {
 	sf::Clock clock;
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
-	while (mWindow.isOpen())
+	while (mPlayerStats.wantsToLeave == false)
 	{
 		sf::Time elapsedTime = clock.restart();
 		timeSinceLastUpdate += elapsedTime;
@@ -74,9 +78,11 @@ void Game::run()
 			processEvents();
 			update(TimePerFrame);
 		}
-		updateStatistics(elapsedTime);
+		//updateStatistics(elapsedTime);
 		render();
 	}
+
+
 }
 
 
@@ -113,29 +119,47 @@ void Game::processEvents()
 void Game::update(sf::Time elapsedTime)
 {
 
-	float posDiffernce = mWorldView.getCenter().y - mPlayer1.getSpriteRef().getPosition().y;
-	if (mPlayer1.getHealth() <= 0 || posDiffernce <= -400.0f)
+	if (mPlayerStats.isAlive == false)
+	{
+		mSoundPlayer.setBuffer(mPlayerDeadSound);
+		mSoundPlayer.play();
+		delete mPlayer1;
+		delete mTileMap;
+		delete mWorldView;
+		mWorldView = new sf::View(sf::FloatRect(0, 0, 640, 680));
+		mWorldView->setCenter(mWorldView->getCenter().x, 0);
+		mPlayer1 = new Player(mTextureManager);
+		mTileMap = new TileMap(mWindow.getSize(), mTextureManager);
+		mPlayer1->setPosition(250, -200);
+		PlayerSpeed = 300.0f;
+		CameraSpeed = -4.0f;
+		mPlayerStats.isAlive = true;
+		mPlayer1->getSpriteRef().setPosition(0,0);
+	
+		//mStatisticsText.setPosition(5.f, 5.f);
+		mBackgroundMusic.stop();
+		mBackgroundMusic.play();
+	}
+
+
+	float posDiffernce = mWorldView->getCenter().y - mPlayer1->getSpriteRef().getPosition().y;
+	if (mPlayer1->getHealth() <= 0 || posDiffernce <= -400.0f)
 	{
 		mPlayerStats.isAlive = false;
-		std::cout << "PLAYER IS DEAD" << std::endl;
+		//std::cout << "PLAYER IS DEAD" << std::endl;
 
 	}
 	
-	if (mTileMap.updateTileMap(mWorldView.getCenter().y, CameraSpeed) == true)
+	if (mTileMap->updateTileMap(mWorldView->getCenter().y, CameraSpeed) == true && CameraSpeed > CameraMaxSpeed)
 	{
 		CameraSpeed -= 0.5f;
-		/*std::cout << "PLAYER" << mPlayer1.getSpriteRef().getPosition().y << std::endl;
-		std::cout << "WORLD" << mWorldView.getCenter().y << std::endl;*/
-		//std::cout << posDiffernce << std::endl;
-		
 	}
 
 	sf::Vector2f realMovement(0.f, 0.f);
 	//Handle movement
-	
 	if (mPlayerStats.mIsMovingUp){
 		sf::Vector2f movement(0.f, 0.f);
-		sf::Sprite testSprite(mPlayer1.getSpriteRef());
+		sf::Sprite testSprite(mPlayer1->getSpriteRef());
 		movement.y -= PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
 		if (playerCollisionDetection(testSprite, elapsedTime) == false)
@@ -146,7 +170,7 @@ void Game::update(sf::Time elapsedTime)
 
 	if (mPlayerStats.mIsMovingDown){
 		sf::Vector2f movement(0.f, 0.f);
-		sf::Sprite testSprite(mPlayer1.getSpriteRef());
+		sf::Sprite testSprite(mPlayer1->getSpriteRef());
 		movement.y += PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
 		if (playerCollisionDetection(testSprite,elapsedTime) == false)
@@ -156,7 +180,7 @@ void Game::update(sf::Time elapsedTime)
 	}
 	if (mPlayerStats.mIsMovingLeft){
 		sf::Vector2f movement(0.f, 0.f);
-		sf::Sprite testSprite(mPlayer1.getSpriteRef());
+		sf::Sprite testSprite(mPlayer1->getSpriteRef());
 		movement.x -= PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
 		if (playerCollisionDetection(testSprite,elapsedTime) == false)
@@ -167,7 +191,7 @@ void Game::update(sf::Time elapsedTime)
 
 	if (mPlayerStats.mIsMovingRight){
 		sf::Vector2f movement(0.f, 0.f);
-		sf::Sprite testSprite(mPlayer1.getSpriteRef());
+		sf::Sprite testSprite(mPlayer1->getSpriteRef());
 		movement.x += PlayerSpeed;
 		testSprite.move(movement * elapsedTime.asSeconds());
 		if (playerCollisionDetection(testSprite, elapsedTime) == false)
@@ -176,28 +200,28 @@ void Game::update(sf::Time elapsedTime)
 		}
 	}
 
-	std::vector<Projectile> projectiles = mPlayer1.getProjectiles();
+	std::vector<Projectile> projectiles = mPlayer1->getProjectiles();
 	if (projectiles.size() != 0)
 	{
 		for (std::vector<int>::size_type i = 0; i != projectiles.size(); ++i)
 		{
 			if (ProjectileCollisionDetection(projectiles[i].getSpriteRef()) == true)
 			{
-				mPlayer1.removeProjectile(i);
+				mPlayer1->removeProjectile(i);
 			}
 		}
 	}
-	mPlayer1.move(realMovement * elapsedTime.asSeconds());
-	mPlayer1.update(elapsedTime, mPlayerStats);
-	mWorldView.move(0.0f, CameraSpeed);
-	mStatisticsText.move(0.0f, CameraSpeed);
+	mPlayer1->move(realMovement * elapsedTime.asSeconds());
+	mPlayer1->update(elapsedTime, mPlayerStats);
+	mWorldView->move(0.0f, CameraSpeed);
+	//mStatisticsText.move(0.0f, CameraSpeed);
 }
 
 
 bool Game::ProjectileCollisionDetection(sf::Sprite testSprite)
 {
 	sf::Sprite inSprite = testSprite;
-	mCollisionSprites = mTileMap.getCollisionSprites();
+	mCollisionSprites = mTileMap->getCollisionSprites();
 	for (std::vector<int>::size_type i = 0; i != mCollisionSprites.size(); i++)
 	{
 		for (std::vector<int>::size_type j = 0; j != mCollisionSprites[i].size(); j++)
@@ -207,15 +231,15 @@ bool Game::ProjectileCollisionDetection(sf::Sprite testSprite)
 			{
 				if (mCollisionSprites[i][j].getTileType() == "Wall")
 				{
+					mSoundPlayer.setBuffer(mExplosionSound);
+					mSoundPlayer.play();
 					//std::cout << i << std::endl;
-					mTileMap.updateTile(i, j, "Ice");
+					mTileMap->updateTile(i, j, "Ice");
 					return true;
 				}
 				
 			}
 		}
-
-
 	}
 	return false;
 
@@ -227,7 +251,7 @@ bool Game::playerCollisionDetection(sf::Sprite testSprite, sf::Time elapsedTime)
 	static sf::Time lastTimeHitted;
 	lastTimeHitted += elapsedTime;
 	sf::Sprite inSprite = testSprite;
-	mCollisionSprites = mTileMap.getCollisionSprites();
+	mCollisionSprites = mTileMap->getCollisionSprites();
 	for (std::vector<int>::size_type i = 0; i != mCollisionSprites.size(); i++)
 	{
 		for (std::vector<int>::size_type j = 0; j != mCollisionSprites[i].size(); j++)
@@ -243,27 +267,36 @@ bool Game::playerCollisionDetection(sf::Sprite testSprite, sf::Time elapsedTime)
 					//mPlayer.move(pushDir);
 					if (lastTimeHitted >= sf::seconds(2.0f))
 					{
-						mPlayer1.removeHealth(10);
+						mTileMap->updateTile(i, j, "Ice");
+						mSoundPlayer.setBuffer(mGotHitSound);
+						mSoundPlayer.play();
+						mPlayer1->removeHealth(10);
 						lastTimeHitted -= lastTimeHitted;
-						std::cout << "Player took damage, health left : " << mPlayer1.getHealth() << std::endl;
+						//std::cout << "Player took damage, health left : " << mPlayer1->getHealth() << std::endl;
 					}
 					
 				}
 				else if (mCollisionSprites[i][j].getTileType() == "SpeedPowerUp")
 				{
-					mTileMap.updateTile(i, j, "Ice");
+				
+					mSoundPlayer.setBuffer(mPowerUpSpeedSound);
+					mSoundPlayer.play();
+					mTileMap->updateTile(i, j, "Ice");
 					PlayerSpeed += speedPowerUp;
+					mPlayer1->speedUp();
 				}
 				else if (mCollisionSprites[i][j].getTileType() == "ShieldPowerUp")
 				{
-					mTileMap.updateTile(i, j, "Ice");
-					mPlayer1.addHealth(10);
+					mSoundPlayer.setBuffer(mPowerUpShieldSound);
+					mSoundPlayer.play();
+					mTileMap->updateTile(i, j, "Ice");
+					mPlayer1->addHealth(10);
 				}
  				return true;
 			}
 			else
 			{
-				mPlayer1.getSpriteRef().setColor(sf::Color(0, 255, 0, 255));
+				mPlayer1->getSpriteRef().setColor(sf::Color(0, 255, 0, 255));
 
 			}
 		}
@@ -277,10 +310,10 @@ bool Game::playerCollisionDetection(sf::Sprite testSprite, sf::Time elapsedTime)
 void Game::render()
 {
 	mWindow.clear();
-	mWindow.setView(mWorldView);
+	mWindow.setView(*mWorldView);
 
 
-	std::vector<std::vector<Tile>> tileMap1 = mTileMap.getSpritesToDraw();
+	std::vector<std::vector<Tile>> tileMap1 = mTileMap->getSpritesToDraw();
 	for (std::vector<int>::size_type i = 0; i != tileMap1.size(); ++i)
 	{
 		for (std::vector<int>::size_type j = 0; j != tileMap1[i].size(); ++j)
@@ -289,7 +322,7 @@ void Game::render()
 		}
 	}
 
-	std::vector<std::vector<Tile>> tileMap2 = mTileMap.getCollisionSprites();
+	std::vector<std::vector<Tile>> tileMap2 = mTileMap->getCollisionSprites();
 	for (std::vector<int>::size_type i = 0; i != tileMap2.size(); ++i)
 	{
 		for (std::vector<int>::size_type j = 0; j != tileMap2[i].size(); ++j)
@@ -299,7 +332,7 @@ void Game::render()
 	}
 
 
-	std::vector<Projectile> projectiles = mPlayer1.getProjectiles();
+	std::vector<Projectile> projectiles = mPlayer1->getProjectiles();
 	if (projectiles.size() != 0)
 	{
 		for (std::vector<int>::size_type i = 0; i != projectiles.size(); ++i)
@@ -308,8 +341,8 @@ void Game::render()
 		}
 	}
 
-	mWindow.draw(mPlayer1.getSpriteRef());
-	mWindow.draw(mStatisticsText);
+	mWindow.draw(mPlayer1->getSpriteRef());
+	//mWindow.draw(mStatisticsText);
 	mWindow.display();
 }
 
@@ -318,16 +351,16 @@ void Game::render()
 
 void Game::updateStatistics(sf::Time elapsedTime)
 {
-	mStatisticsUpdateTime += elapsedTime;
-	mStatisticsNumFrames += 1;
-	if (mStatisticsUpdateTime >= sf::seconds(1.0f))
-	{
-		mStatisticsText.setString(
-			"Frames / Second = " + toString(mStatisticsNumFrames) + "\n");
+	//mStatisticsUpdateTime += elapsedTime;
+	//mStatisticsNumFrames += 1;
+	//if (mStatisticsUpdateTime >= sf::seconds(1.0f))
+	//{
+	//	mStatisticsText.setString(
+	//		"Frames / Second = " + toString(mStatisticsNumFrames) + "\n");
 
-		mStatisticsUpdateTime -= sf::seconds(1.0f);
-		mStatisticsNumFrames = 0;
-	}
+	//	mStatisticsUpdateTime -= sf::seconds(1.0f);
+	//	mStatisticsNumFrames = 0;
+	//}
 }
 
 
@@ -343,4 +376,6 @@ void Game::handlePlayerInput(sf::Keyboard::Key key, bool isPressed)
 		mPlayerStats.mIsMovingRight = isPressed;
 	else if (key == sf::Keyboard::Space)
 		mPlayerStats.isShooting = isPressed;
+	else if (key == sf::Keyboard::Escape)
+		mPlayerStats.wantsToLeave = true;
 }

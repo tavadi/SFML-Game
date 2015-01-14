@@ -19,6 +19,7 @@ public:
 	void removeHealth(int damage);
 	int getHealth();
 	void addHealth(int health);
+	void speedUp();
 private:
 	PlayerStats* playerStats;
 	int mPlayerHealth;
@@ -32,6 +33,9 @@ private:
 	sf::Time shootRate;
 	sf::Time shootLength;
 	sf::Time shootElapsedTime;
+	sf::Time animationRate;
+	unsigned int mHealthCounter;
+
 
 
 };
